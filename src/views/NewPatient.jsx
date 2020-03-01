@@ -42,15 +42,14 @@ import {
 class NewPatient extends React.Component {
       
   render() {
-    return (
-      {
-      window.React1 = require('react');
-
+    
       // Agrega esto en tu componente
       require('react-dom');
       window.React2 = require('react');
       console.log(window.React1 === window.React2);
-      }
+      
+    return (
+      
       <>
         <div className="content">
             <Row>
@@ -110,6 +109,7 @@ class NewPatient extends React.Component {
                         <MDBInput label="Default unchecked" type="radio" id="radio1" />
                         <MDBInput label="Default unchecked" type="radio" id="radio1" />
                       </MDBContainer>
+                      <MDBBtn></MDBBtn>
                     </form>
                   </CardBody>
                 </Card>
