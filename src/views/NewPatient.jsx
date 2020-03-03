@@ -32,7 +32,7 @@ import { MDBInput, MDBBtn, MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody } 
 class NewPatient extends React.Component {
 
   render() {
-      
+      const err_msgs = ["Éste campo es obligatorio", "Formato Incorrecto"]
     return (
       <>
         <div className="content">
@@ -50,7 +50,22 @@ class NewPatient extends React.Component {
                 <Card>
                   <CardBody>
                   <Formik
-                    initialValues={{ email: "" , name:""}}
+                    initialValues={{  
+                    nombre:"",
+                    apellido_paterno: "Torreblanca",
+                    apellido_materno: "Faces",
+                    fecha_nacimiento: "1996-04-22",
+                    genero: "Masculino",
+                    curp: "TOFJ960422HDFRCS02",
+                    email: "alexis_torreblanca@outlook.com",
+                    telefono_celular: 5544864569,
+                    ocupacion: "1",
+                    estado_civil: "1",
+                    enfermedades_recientes: ["Gripa"],
+                    medicamentos: null,
+                    enfermedades_cronicas: ["algo", "algo"],
+                    enfermedades_hereditarias: null
+                  }}
                     onSubmit={async values => {
                       await new Promise(resolve => setTimeout(resolve, 500));
                       alert(JSON.stringify(values, null, 2));
@@ -58,24 +73,11 @@ class NewPatient extends React.Component {
                     validationSchema={Yup.object().shape({
                       email: Yup.string()
                         .email()
-                        .required("Required"),
+                        .required(err_msgs[0]),
                       nombre: Yup.string()
-                        .required('Required'),
-                        nombre:"Otro nombre",
-                        apellido_paterno: "Torreblanca",
-                        apellido_materno: "Faces",
-                        fecha_nacimiento: "1996-04-22",
-                        genero: "Masculino",
-                        curp: "TOFJ960422HDFRCS02",
-                        email: "alexis_torreblanca@outlook.com",
-                        telefono_celular: 5544864569,
-                        ocupacion: "1",
-                        estado_civil: "1",
-                        enfermedades_recientes: ["Gripa"],
-                        medicamentos: null,
-                        enfermedades_cronicas: ["algo", "algo"],
-                        enfermedades_hereditarias: null
-                      
+                        .matches(/^[a-zA-Z]+$/,err_msgs[1])
+                        .required(err_msgs[0]),
+                        
 
                     })}
                   >
@@ -97,18 +99,54 @@ class NewPatient extends React.Component {
                       <Row>
                         <Col md="12">
                           
-                        <MDBInput 
-                        id="name"
-
+                        <MDBInput type="text" 
                         label="Nombre(s)" 
-                        size="sm"/>
+                        id="nombre"
+                        value={values.nombre} 
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={
+                          errors.nombre
+                          ? 'is-invalid'
+                          : ''
+                        }
+                        size="sm"
+                        >
+                          {errors.nombre 
+                          ? 
+                          (<div className="invalid-feedback">
+                            {errors.nombre}
+                          </div>)
+                          : ""}
+                        
+                        </MDBInput>
                           
                         </Col>
                       </Row>
 
                       <Row>
                         <Col md="6">
-                        <MDBInput label="Apellido Paterno" size="sm"/>
+                        <MDBInput type="text" 
+                        label="Apellido Paterno" 
+                        id="apellido_paterno"
+                        value={values.apellido_paterno}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={
+                          errors.apellido_paterno
+                          ? 'is-invalid'
+                          : ''
+                        }
+                        size="sm"
+                        >
+                          {errors.apellido_paterno 
+                          ? 
+                          (<div className="invalid-feedback">
+                            {errors.apellido_paterno}
+                          </div>)
+                          : ""}
+                        
+                        </MDBInput>
                         </Col>
 
                         <Col md="6">
