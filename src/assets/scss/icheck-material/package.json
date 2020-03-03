@@ -1,0 +1,61 @@
+{
+  "_from": "icheck-material",
+  "_id": "icheck-material@1.0.1",
+  "_inBundle": false,
+  "_integrity": "sha512-uruQ7el8Jq/7mTiW/+TC694g1hsdf7XgjGSbqccuIfMketEqy5OubDnBOUjaRYdNdeVQORnUBzTnVEIdjG7l/A==",
+  "_location": "/icheck-material",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "icheck-material",
+    "name": "icheck-material",
+    "escapedName": "icheck-material",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/icheck-material/-/icheck-material-1.0.1.tgz",
+  "_shasum": "80c776134e0f92fe1f3d410da3c05e46d65804c0",
+  "_spec": "icheck-material",
+  "_where": "D:\\mooze\\Documents\\TT\\UI\\TT_full",
+  "author": {
+    "name": "Hovhannes Bantikyan"
+  },
+  "bugs": {
+    "url": "https://github.com/bantikyan/icheck-material/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "Pure css material checkboxes and radio buttons.",
+  "files": [
+    "_icheck-material-base.scss",
+    "_icheck-material-theme.scss",
+    "icheck-material.css",
+    "icheck-material.min.css",
+    "icheck-material.scss",
+    "icheck-material-custom.css",
+    "icheck-material-custom.min.css",
+    "icheck-material-custom.scss"
+  ],
+  "homepage": "https://github.com/bantikyan/icheck-material#readme",
+  "keywords": [
+    "checkbox",
+    "radio",
+    "material",
+    "pure",
+    "css"
+  ],
+  "license": "MIT",
+  "main": "icheck-material.css",
+  "name": "icheck-material",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bantikyan/icheck-material.git"
+  },
+  "version": "1.0.1"
+}

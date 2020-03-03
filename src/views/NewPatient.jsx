@@ -18,38 +18,22 @@
 */
 import React, { Fragment } from "react";
 import {
-    Button,
     Card,
-    CardHeader,
     CardBody,
-    CardFooter,
-    CardTitle,
     Form,
     Row,
-    Col,
-    Input,
-    Table,
-    FormGroup
+    Col
 } from "reactstrap";
+import { Formik } from 'formik';
+import * as Yup from "yup";
 import { MDBInput, MDBBtn, MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody } from 'mdbreact'
 // core components
-import {
-  dashboard24HoursPerformanceChart,
-  dashboardEmailStatisticsChart,
-  dashboardNASDAQChart
-} from "variables/charts.jsx";
 
 class NewPatient extends React.Component {
-      
+
   render() {
-    
-      // Agrega esto en tu componente
-      require('react-dom');
-      window.React2 = require('react');
-      console.log(window.React1 === window.React2);
       
     return (
-      
       <>
         <div className="content">
             <Row>
@@ -65,52 +49,141 @@ class NewPatient extends React.Component {
               <Col md="8">
                 <Card>
                   <CardBody>
-                    <form>
+                  <Formik
+                    initialValues={{ email: "" , name:""}}
+                    onSubmit={async values => {
+                      await new Promise(resolve => setTimeout(resolve, 500));
+                      alert(JSON.stringify(values, null, 2));
+                    }}
+                    validationSchema={Yup.object().shape({
+                      email: Yup.string()
+                        .email()
+                        .required("Required"),
+                      nombre: Yup.string()
+                        .required('Required'),
+                        nombre:"Otro nombre",
+                        apellido_paterno: "Torreblanca",
+                        apellido_materno: "Faces",
+                        fecha_nacimiento: "1996-04-22",
+                        genero: "Masculino",
+                        curp: "TOFJ960422HDFRCS02",
+                        email: "alexis_torreblanca@outlook.com",
+                        telefono_celular: 5544864569,
+                        ocupacion: "1",
+                        estado_civil: "1",
+                        enfermedades_recientes: ["Gripa"],
+                        medicamentos: null,
+                        enfermedades_cronicas: ["algo", "algo"],
+                        enfermedades_hereditarias: null
+                      
+
+                    })}
+                  >
+                    {props => {
+                    const {
+                      values,
+                      touched,
+                      errors,
+                      dirty,
+                      isSubmitting,
+                      handleChange,
+                      handleBlur,
+                      handleSubmit,
+                      handleReset
+                    } = props;
+                    return (
+                    <Form onSubmit={handleSubmit}>
 
                       <Row>
                         <Col md="12">
                           
-                        <MDBInput label="Nombre(s)"/>
+                        <MDBInput 
+                        id="name"
+
+                        label="Nombre(s)" 
+                        size="sm"/>
                           
                         </Col>
                       </Row>
 
                       <Row>
                         <Col md="6">
-                        <MDBInput label="Apellido Paterno"/>
+                        <MDBInput label="Apellido Paterno" size="sm"/>
                         </Col>
 
                         <Col md="6">
-                        <MDBInput label="Apellido Materno"/>
+                        <MDBInput label="Apellido Materno" size="sm"/>
                         </Col>
                       </Row>
 
                       <Row>
                         <Col md="6">
-                        <MDBInput label="CURP"/>
+                        <MDBInput label="CURP" size="sm"/>
                         </Col>
 
                         <Col md="6">
-                        <MDBInput label="Fecha de Nacimiento"/>
+                        <MDBInput label="Fecha de Nacimiento" size="sm"/>
                         </Col>
                       </Row>
 
                       <Row>
                         <Col md="6">
-                        <MDBInput label="Correo Electrónico"/>
+                        <MDBInput label="Correo Electrónico" type="email" size="sm"/>
                         </Col>
 
                         <Col md="6">
-                        <MDBInput label="Teléfono"/>
+                        <MDBInput label="Teléfono" size="sm"/>
                         </Col>
                       </Row>
-                      <MDBContainer className="mt-5">
-                        <MDBInput label="Default unchecked" type="radio" id="radio1" />
-                        <MDBInput label="Default unchecked" type="radio" id="radio1" />
-                        <MDBInput label="Default unchecked" type="radio" id="radio1" />
-                      </MDBContainer>
-                      <MDBBtn></MDBBtn>
-                    </form>
+
+                      <Row>
+                        <Col md="6">
+                          <div class="icheck-material-main icheck-inline">
+                            <input type="radio" id="gender1" name="gender" />
+                            <label for="gender1">Masculino</label>
+                          </div>
+                          <br/>
+                          <div class="icheck-material-main icheck-inline">
+                            <input type="radio" id="gender2" name="gender" />
+                            <label for="gender2">Femenino</label>
+                          </div>
+                        </Col>
+                      </Row>
+
+                      <Row>
+                        <Col md="6">
+                          <MDBInput type="textarea" label="Medicamentos" rows="5" size="sm"/>
+                        </Col>
+
+                        <Col md="6">
+                          <MDBInput type="textarea" label="Enfermedades crónicas" rows="5" size="sm"/>
+                        </Col>
+                      </Row>
+                      
+                      <Row>
+                        <Col md="6">
+                          <MDBInput type="textarea" label="Enfermedades hereditarias" rows="5" size="sm"/>
+                        </Col>
+
+                        <Col md="6">
+                          <MDBInput type="textarea" label="Enfermedades recientes" rows="5" size="sm"/>
+                        </Col>
+                      </Row>
+
+                      <Row>
+                        <Col md="12">
+                          <div className="pull-right">
+                          <MDBBtn color="warning">CANCELAR</MDBBtn>
+                          <MDBBtn type="submit" color="primary">GUARDAR</MDBBtn>
+                          </div>  
+                        </Col>
+                      </Row>
+
+                      
+                    </Form>
+                    );
+                  }}
+                </Formik>
                   </CardBody>
                 </Card>
               </Col>

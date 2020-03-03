@@ -17,27 +17,22 @@
 
 */
 import React from "react";
-// react plugin used to create charts
-import { Line, Pie } from "react-chartjs-2";
-// reactstrap components
 import {
-    Button,
-    Card,
-    CardHeader,
-    CardBody,
-    CardFooter,
-    CardTitle,
-    Form,
-    Row,
-    Col,
-    Table
+  Button,
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  CardTitle,
+  Form,
+  Row,
+  Col,
+  Input,
+  Table,
+  FormGroup
 } from "reactstrap";
-// core components
-import {
-  dashboard24HoursPerformanceChart,
-  dashboardEmailStatisticsChart,
-  dashboardNASDAQChart
-} from "variables/charts.jsx";
+import { NavLink } from "react-router-dom";
+import { Nav } from "reactstrap";
 import { MDBBtn } from "mdbreact";
 import Axios from 'axios';
 
@@ -52,7 +47,7 @@ class Patients extends React.Component {
 
     async componentDidMount() {
       const {data} = await Axios.get('http://localhost:8080/patient/list?nombre=all&curp=all');
-	  this.setState({patients: data});
+	    this.setState({patients: data});
 	}
 	
 	async deletePatient(){
@@ -89,9 +84,11 @@ class Patients extends React.Component {
                 <h5 className="title">Mis Pacientes</h5>
                 </Col>
                 <Col md="4">
-                    <a className="btn btn-success" href="/admin/new_patient">
+                    <Nav>
+                      <NavLink className="btn btn-success" to="/admin/new_patient">
                         Nuevo Paciente
-                    </a>
+                      </NavLink>
+                    </Nav>
                 </Col>
             </Row>
             <Row>
@@ -118,10 +115,10 @@ class Patients extends React.Component {
                             <td>{patient.fecha_nacimiento}</td>
                             <td>{patient.email}</td>
                             <td>
-                              
-                              <Button id={patient.id_paciente} onClick={this.handleEdit} className="btn-success">Editar</Button>
-                                        <span>   </span>
-                        	<Button id={patient.id_paciente} onClick={this.handleDelete} className="btn-danger">Borrar</Button></td>
+                              <MDBBtn id={patient.id_paciente} onClick={this.handleEdit} idcolor="primary">Editar</MDBBtn>
+                              <span/>
+                              <MDBBtn id={patient.id_paciente} onClick={this.handleDelete} color="warning">Borrar</MDBBtn>
+                            </td>
                           </tr>
                         )
                       })}
