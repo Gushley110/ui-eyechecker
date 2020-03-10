@@ -63,7 +63,7 @@ class Home extends React.Component {
         'Octubre',
         'Noviembre',
         'Diciembre'
-    ];
+        ];
 
         that.setState({
           //Setting the value of the date time

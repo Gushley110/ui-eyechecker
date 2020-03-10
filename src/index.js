@@ -28,9 +28,6 @@ import "assets/demo/demo.css";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 import 'assets/scss/icheck-material/icheck-material.scss';
 
-
-import '@fortawesome/fontawesome-free/css/all.min.css';  
-
 import AdminLayout from "layouts/Admin.jsx";
 
 const hist = createBrowserHistory();

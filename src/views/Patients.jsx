@@ -33,7 +33,6 @@ import {
 } from "reactstrap";
 import { NavLink } from "react-router-dom";
 import { Nav } from "reactstrap";
-import { MDBBtn } from "mdbreact";
 import Axios from 'axios';
 
 
@@ -115,9 +114,9 @@ class Patients extends React.Component {
                             <td>{patient.fecha_nacimiento}</td>
                             <td>{patient.email}</td>
                             <td>
-                              <MDBBtn id={patient.id_paciente} onClick={this.handleEdit} idcolor="primary">Editar</MDBBtn>
+                              <Button id={patient.id_paciente} onClick={this.handleEdit} idcolor="primary">Editar</Button>
                               <span/>
-                              <MDBBtn id={patient.id_paciente} onClick={this.handleDelete} color="warning">Borrar</MDBBtn>
+                              <Button id={patient.id_paciente} onClick={this.handleDelete} color="warning">Borrar</Button>
                             </td>
                           </tr>
                         )

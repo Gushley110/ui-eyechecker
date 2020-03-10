@@ -26,10 +26,26 @@ import {
 } from "reactstrap";
 import { Formik } from 'formik';
 import * as Yup from "yup";
-import { MDBInput, MDBBtn, MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody } from 'mdbreact'
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker
+} from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 // core components
 
 class NewPatient extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      date: new Date('2014-08-18T21:11:54'),
+    };
+  }
+
+  handleDateChange = date => {
+    this.setState({date : date})
+  };
 
   render() {
       const err_msgs = ["Éste campo es obligatorio", "Formato Incorrecto"]
@@ -99,34 +115,24 @@ class NewPatient extends React.Component {
                       <Row>
                         <Col md="12">
                           
-                        <MDBInput type="text" 
+                        <TextField type="text" 
                         label="Nombre(s)" 
                         id="nombre"
                         value={values.nombre} 
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        className={
-                          errors.nombre
-                          ? 'is-invalid'
-                          : ''
-                        }
-                        size="sm"
-                        >
-                          {errors.nombre 
-                          ? 
-                          (<div className="invalid-feedback">
-                            {errors.nombre}
-                          </div>)
-                          : ""}
-                        
-                        </MDBInput>
+                        error={errors.nombre 
+                          ? true 
+                          : false}
+                        fullWidth
+                        />
                           
                         </Col>
                       </Row>
 
                       <Row>
                         <Col md="6">
-                        <MDBInput type="text" 
+                        <TextField type="text" 
                         label="Apellido Paterno" 
                         id="apellido_paterno"
                         value={values.apellido_paterno}
@@ -137,7 +143,7 @@ class NewPatient extends React.Component {
                           ? 'is-invalid'
                           : ''
                         }
-                        size="sm"
+                        fullWidth
                         >
                           {errors.apellido_paterno 
                           ? 
@@ -146,31 +152,124 @@ class NewPatient extends React.Component {
                           </div>)
                           : ""}
                         
-                        </MDBInput>
+                        </TextField>
                         </Col>
 
                         <Col md="6">
-                        <MDBInput label="Apellido Materno" size="sm"/>
+                        <TextField type="text" 
+                        label="Apellido Materno" 
+                        id="apellido_materno"
+                        value={values.apellido_materno}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={
+                          errors.apellido_materno
+                          ? 'is-invalid'
+                          : ''
+                        }
+                        fullWidth
+                        >
+                          {errors.apellido_materno 
+                          ? 
+                          (<div className="invalid-feedback">
+                            {errors.apellido_materno}
+                          </div>)
+                          : ""}
+                        
+                        </TextField>
                         </Col>
                       </Row>
 
                       <Row>
                         <Col md="6">
-                        <MDBInput label="CURP" size="sm"/>
+                        <TextField type="text" 
+                        label="CURP" 
+                        id="curp"
+                        value={values.curp}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={
+                          errors.curp
+                          ? 'is-invalid'
+                          : ''
+                        }
+                        fullWidth
+                        >
+                          {errors.curp 
+                          ? 
+                          (<div className="invalid-feedback">
+                            {errors.curp}
+                          </div>)
+                          : ""}
+                        
+                        </TextField>
                         </Col>
 
                         <Col md="6">
-                        <MDBInput label="Fecha de Nacimiento" size="sm"/>
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardDatePicker
+          margin="normal"
+          id="date-picker-dialog"
+          label="Date picker dialog"
+          format="MM/dd/yyyy"
+          value={this.state.date}
+          onChange={this.handleDateChange}
+          KeyboardButtonProps={{
+            'aria-label': 'change date',
+          }}
+        />
+        </MuiPickersUtilsProvider>
+                        <TextField label="Fecha de Nacimiento" size="sm"/>
                         </Col>
                       </Row>
 
                       <Row>
                         <Col md="6">
-                        <MDBInput label="Correo Electrónico" type="email" size="sm"/>
+                        <TextField type="text" 
+                        label="Correo Electrónico" 
+                        id="email"
+                        value={values.email}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={
+                          errors.email
+                          ? 'is-invalid'
+                          : ''
+                        }
+                        fullWidth
+                        >
+                          {errors.email 
+                          ? 
+                          (<div className="invalid-feedback">
+                            {errors.email}
+                          </div>)
+                          : ""}
+                        
+                        </TextField>
                         </Col>
 
                         <Col md="6">
-                        <MDBInput label="Teléfono" size="sm"/>
+                        <TextField type="text" 
+                        label="Teléfono" 
+                        id="telefono_celular"
+                        value={values.telefono_celular}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={
+                          errors.telefono_celular
+                          ? 'is-invalid'
+                          : ''
+                        }
+                        fullWidth
+                        >
+                          {errors.telefono_celular 
+                          ? 
+                          (<div className="invalid-feedback">
+                            {errors.telefono_celular}
+                          </div>)
+                          : ""}
+                        
+                        </TextField>
                         </Col>
                       </Row>
 
@@ -190,29 +289,29 @@ class NewPatient extends React.Component {
 
                       <Row>
                         <Col md="6">
-                          <MDBInput type="textarea" label="Medicamentos" rows="5" size="sm"/>
+                          <TextField type="textarea" label="Medicamentos" rows="5" size="sm"/>
                         </Col>
 
                         <Col md="6">
-                          <MDBInput type="textarea" label="Enfermedades crónicas" rows="5" size="sm"/>
+                          <TextField type="textarea" label="Enfermedades crónicas" rows="5" size="sm"/>
                         </Col>
                       </Row>
                       
                       <Row>
                         <Col md="6">
-                          <MDBInput type="textarea" label="Enfermedades hereditarias" rows="5" size="sm"/>
+                          <TextField type="textarea" label="Enfermedades hereditarias" rows="5" size="sm"/>
                         </Col>
 
                         <Col md="6">
-                          <MDBInput type="textarea" label="Enfermedades recientes" rows="5" size="sm"/>
+                          <TextField type="textarea" label="Enfermedades recientes" rows="5" size="sm"/>
                         </Col>
                       </Row>
 
                       <Row>
                         <Col md="12">
                           <div className="pull-right">
-                          <MDBBtn color="warning">CANCELAR</MDBBtn>
-                          <MDBBtn type="submit" color="primary">GUARDAR</MDBBtn>
+                          <Button color="warning">CANCELAR</Button>
+                          <Button type="submit" color="primary">GUARDAR</Button>
                           </div>  
                         </Col>
                       </Row>
