@@ -18,6 +18,7 @@
 */
 import React, { Fragment } from "react";
 import {
+    Button,
     Card,
     CardBody,
     Form,
@@ -27,20 +28,34 @@ import {
 import { Formik } from 'formik';
 import * as Yup from "yup";
 import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
 import {
   MuiPickersUtilsProvider,
-  KeyboardDatePicker
+  DatePicker
 } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import Axios from 'axios';
 // core components
 
 class NewPatient extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      date: new Date('2014-08-18T21:11:54'),
+      date: new Date().toJSON(),
+      occupations : [],
+      civil_status: []
     };
+  }
+
+  async componentDidMount() {
+    
+    const {data} = await Axios.get('http://localhost:8080/list/catalogue/ocupacion');
+    
+    this.setState({occupations: data});
+    
+    
   }
 
   handleDateChange = date => {
@@ -49,6 +64,16 @@ class NewPatient extends React.Component {
 
   render() {
       const err_msgs = ["Éste campo es obligatorio", "Formato Incorrecto"]
+      const occupations = this.state.occupations
+      const civil_status = this.state.civil_status
+      const occupation_items = []
+      const cv_status_items = [] 
+
+      for(var idx in occupations){
+        
+          occupation_items.push(<MenuItem value={idx}>{occupations[idx]}</MenuItem>)
+        
+      }    
     return (
       <>
         <div className="content">
@@ -67,7 +92,7 @@ class NewPatient extends React.Component {
                   <CardBody>
                   <Formik
                     initialValues={{  
-                    nombre:"",
+                    nombre:"Gustavo",
                     apellido_paterno: "Torreblanca",
                     apellido_materno: "Faces",
                     fecha_nacimiento: "1996-04-22",
@@ -93,6 +118,15 @@ class NewPatient extends React.Component {
                       nombre: Yup.string()
                         .matches(/^[a-zA-Z]+$/,err_msgs[1])
                         .required(err_msgs[0]),
+                      apellido_paterno: Yup.string()
+                        .matches(/^[a-zA-Z]+$/,err_msgs[1])
+                        .required(err_msgs[0]),
+                      apellido_materno: Yup.string()
+                        .matches(/^[a-zA-Z]+$/,err_msgs[1])
+                        .required(err_msgs[0]),
+                      curp: Yup.string()
+                        .matches(/^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$/,err_msgs[1])
+                      .required(err_msgs[0])
                         
 
                     })}
@@ -107,7 +141,9 @@ class NewPatient extends React.Component {
                       handleChange,
                       handleBlur,
                       handleSubmit,
-                      handleReset
+                      handleReset,
+                      setFieldValue,
+                      setFieldTouched
                     } = props;
                     return (
                     <Form onSubmit={handleSubmit}>
@@ -124,6 +160,11 @@ class NewPatient extends React.Component {
                         error={errors.nombre 
                           ? true 
                           : false}
+                        helperText={
+                          errors.nombre ?
+                          errors.nombre :
+                          ''
+                        }
                         fullWidth
                         />
                           
@@ -138,21 +179,11 @@ class NewPatient extends React.Component {
                         value={values.apellido_paterno}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        className={
-                          errors.apellido_paterno
-                          ? 'is-invalid'
-                          : ''
-                        }
+                        error={errors.apellido_paterno 
+                          ? true 
+                          : false}
                         fullWidth
-                        >
-                          {errors.apellido_paterno 
-                          ? 
-                          (<div className="invalid-feedback">
-                            {errors.apellido_paterno}
-                          </div>)
-                          : ""}
-                        
-                        </TextField>
+                        />
                         </Col>
 
                         <Col md="6">
@@ -207,19 +238,19 @@ class NewPatient extends React.Component {
 
                         <Col md="6">
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <KeyboardDatePicker
-          margin="normal"
-          id="date-picker-dialog"
-          label="Date picker dialog"
-          format="MM/dd/yyyy"
-          value={this.state.date}
-          onChange={this.handleDateChange}
-          KeyboardButtonProps={{
-            'aria-label': 'change date',
-          }}
-        />
-        </MuiPickersUtilsProvider>
-                        <TextField label="Fecha de Nacimiento" size="sm"/>
+                        <DatePicker
+                          margin="normal"
+                          id="date-picker-dialog"
+                          label="Fecha de Nacimiento"
+                          format="yyyy/MM/dd"
+                          value={values.fecha_nacimiento}
+                          onChange={value => setFieldValue('fecha_nacimiento',value)}
+                          fullWidth
+                          KeyboardButtonProps={{
+                            'aria-label': 'change date',
+                          }}
+                        />
+                        </MuiPickersUtilsProvider>
                         </Col>
                       </Row>
 
@@ -272,6 +303,36 @@ class NewPatient extends React.Component {
                         </TextField>
                         </Col>
                       </Row>
+                      <Row>
+                        <Col md="6">
+                        <InputLabel id="ocupacion-label">Ocupación</InputLabel>
+                        <Select
+                          labelId="ocupacion-label"
+                          id="ocupacion"
+                          value={values.ocupacion}
+                          onChange={e => setFieldValue('ocupacion', e.target.value)}
+                          onBlur={()=> setFieldTouched('ocupacion', true)}
+                          fullWidth
+                        >
+                          {occupation_items}
+                          
+                        </Select>
+                        </Col>
+                        <Col md="6">
+                        <InputLabel id="estado_civil-label">Estado Civil</InputLabel>
+                        <Select
+                          labelId="estado_civil-label"
+                          id="estado_civil"
+                          value={values.estado_civil}
+                          onChange={e => setFieldValue('estado_civil', e.target.value)}
+                          onBlur={()=> setFieldTouched('estado_civil', true)}
+                          fullWidth
+                        >
+                          {cv_status_items}
+                          
+                        </Select>
+                        </Col>
+                      </Row>
 
                       <Row>
                         <Col md="6">
@@ -289,29 +350,30 @@ class NewPatient extends React.Component {
 
                       <Row>
                         <Col md="6">
-                          <TextField type="textarea" label="Medicamentos" rows="5" size="sm"/>
+                          <TextField multiline type="textarea" label="Medicamentos" fullWidth rows="5" size="sm"/>
                         </Col>
 
                         <Col md="6">
-                          <TextField type="textarea" label="Enfermedades crónicas" rows="5" size="sm"/>
+                          <TextField multiline type="textarea" label="Enfermedades crónicas" fullWidth rows="5" size="sm"/>
                         </Col>
                       </Row>
                       
                       <Row>
                         <Col md="6">
-                          <TextField type="textarea" label="Enfermedades hereditarias" rows="5" size="sm"/>
+                          <TextField multiline type="textarea" label="Enfermedades hereditarias" fullWidth rows="5" size="sm"/>
                         </Col>
 
                         <Col md="6">
-                          <TextField type="textarea" label="Enfermedades recientes" rows="5" size="sm"/>
+                          <TextField multiline type="textarea" label="Enfermedades recientes" fullWidth  rows="5" size="sm"/>
                         </Col>
                       </Row>
 
                       <Row>
                         <Col md="12">
                           <div className="pull-right">
-                          <Button color="warning">CANCELAR</Button>
-                          <Button type="submit" color="primary">GUARDAR</Button>
+                          <Button variant="contained" size="large" color="warning">CANCELAR</Button>
+                          <span>  </span>
+                          <Button  variant="contained" size="large" type="submit" color="primary">GUARDAR</Button>
                           </div>  
                         </Col>
                       </Row>
