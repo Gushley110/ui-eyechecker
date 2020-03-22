@@ -20,16 +20,10 @@ import React from "react";
 import {
   Button,
   Card,
-  CardHeader,
   CardBody,
-  CardFooter,
-  CardTitle,
-  Form,
   Row,
   Col,
-  Input,
   Table,
-  FormGroup
 } from "reactstrap";
 import { NavLink } from "react-router-dom";
 import { Nav } from "reactstrap";
@@ -114,7 +108,7 @@ class Patients extends React.Component {
                             <td>{patient.fecha_nacimiento}</td>
                             <td>{patient.email}</td>
                             <td>
-                              <Button id={patient.id_paciente} onClick={this.handleEdit} idcolor="primary">Editar</Button>
+                              <Button id={patient.id_paciente} onClick={this.handleEdit}>Editar</Button>
                               <span/>
                               <Button id={patient.id_paciente} onClick={this.handleDelete} color="warning">Borrar</Button>
                             </td>

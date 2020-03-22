@@ -16,7 +16,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { Fragment } from "react";
+import React from "react";
 import {
     Button,
     Card,
@@ -51,9 +51,11 @@ class NewPatient extends React.Component {
 
   async componentDidMount() {
     
-    const {data} = await Axios.get('http://localhost:8080/list/catalogue/ocupacion');
+    const {data1} = await Axios.get('http://localhost:8080/list/catalogue/ocupacion');
+    const {data2} = await Axios.get('http://localhost:8080/list/catalogue/estado_civil');
     
-    this.setState({occupations: data});
+    console.log(data1)
+    this.setState({occupations: data1});
     
     
   }
@@ -246,9 +248,6 @@ class NewPatient extends React.Component {
                           value={values.fecha_nacimiento}
                           onChange={value => setFieldValue('fecha_nacimiento',value)}
                           fullWidth
-                          KeyboardButtonProps={{
-                            'aria-label': 'change date',
-                          }}
                         />
                         </MuiPickersUtilsProvider>
                         </Col>
@@ -336,35 +335,35 @@ class NewPatient extends React.Component {
 
                       <Row>
                         <Col md="6">
-                          <div class="icheck-material-main icheck-inline">
+                          <div className="icheck-material-main icheck-inline">
                             <input type="radio" id="gender1" name="gender" />
-                            <label for="gender1">Masculino</label>
+                            <label htmlFor="gender1">Masculino</label>
                           </div>
                           <br/>
-                          <div class="icheck-material-main icheck-inline">
+                          <div className="icheck-material-main icheck-inline">
                             <input type="radio" id="gender2" name="gender" />
-                            <label for="gender2">Femenino</label>
+                            <label htmlFor="gender2">Femenino</label>
                           </div>
                         </Col>
                       </Row>
 
                       <Row>
                         <Col md="6">
-                          <TextField multiline type="textarea" label="Medicamentos" fullWidth rows="5" size="sm"/>
+                          <TextField multiline type="textarea" label="Medicamentos" fullWidth rows="5" size="medium"/>
                         </Col>
 
                         <Col md="6">
-                          <TextField multiline type="textarea" label="Enfermedades crónicas" fullWidth rows="5" size="sm"/>
+                          <TextField multiline type="textarea" label="Enfermedades crónicas" fullWidth rows="5" size="medium"/>
                         </Col>
                       </Row>
                       
                       <Row>
                         <Col md="6">
-                          <TextField multiline type="textarea" label="Enfermedades hereditarias" fullWidth rows="5" size="sm"/>
+                          <TextField multiline type="textarea" label="Enfermedades hereditarias" fullWidth rows="5" size="medium"/>
                         </Col>
 
                         <Col md="6">
-                          <TextField multiline type="textarea" label="Enfermedades recientes" fullWidth  rows="5" size="sm"/>
+                          <TextField multiline type="textarea" label="Enfermedades recientes" fullWidth  rows="5" size="medium"/>
                         </Col>
                       </Row>
 

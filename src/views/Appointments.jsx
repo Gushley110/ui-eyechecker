@@ -17,27 +17,15 @@
 
 */
 import React from "react";
-// react plugin used to create charts
-import { Line, Pie } from "react-chartjs-2";
-// reactstrap components
 import {
     Button,
     Card,
-    CardHeader,
     CardBody,
-    CardFooter,
-    CardTitle,
-    Form,
     Row,
     Col,
     Table
 } from "reactstrap";
 // core components
-import {
-  dashboard24HoursPerformanceChart,
-  dashboardEmailStatisticsChart,
-  dashboardNASDAQChart
-} from "variables/charts.jsx";
 
 class Appointments extends React.Component {
     constructor(props) {
@@ -56,7 +44,7 @@ class Appointments extends React.Component {
                 <h5 className="title">Citas</h5>
                 </Col>
                 <Col md="4">
-                    <a className="btn btn-success" href="#">
+                    <a className="btn btn-success" href="/">
                         Nueva Cita
                     </a>
                 </Col>
