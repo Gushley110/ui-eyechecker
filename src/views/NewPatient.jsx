@@ -36,7 +36,16 @@ import DateFnsUtils from '@date-io/date-fns';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Axios from 'axios';
+import { FormControl, FormHelperText } from "@material-ui/core";
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 // core components
 
 class NewPatient extends React.Component {
@@ -45,18 +54,22 @@ class NewPatient extends React.Component {
     this.state = {
       date: new Date().toJSON(),
       occupations : [],
-      civil_status: []
+      civil_status: [],
+      dialog_open: false,
+      dialog_title: "",
+      dialog_message: ""
     };
   }
 
   async componentDidMount() {
     
-    const {data1} = await Axios.get('http://localhost:8080/list/catalogue/ocupacion');
-    const {data2} = await Axios.get('http://localhost:8080/list/catalogue/estado_civil');
+    const req_occupations = await Axios.get('http://localhost:8080/list/catalogue/ocupacion');
+    const req_cv_status = await Axios.get('http://localhost:8080/list/catalogue/estado_civil');
     
-    console.log(data1)
-    this.setState({occupations: data1});
-    
+    let occupations = req_occupations.data
+    let cv_status = req_cv_status.data
+
+    this.setState({occupations: occupations, civil_status: cv_status});
     
   }
 
@@ -64,18 +77,50 @@ class NewPatient extends React.Component {
     this.setState({date : date})
   };
 
+  fillMenuItem = arr => {
+    let arr_res = [];
+    for(var idx in arr){    
+      arr_res.push(<MenuItem key={idx} value={idx}>{arr[idx]}</MenuItem>)
+    }
+
+    return arr_res
+  }
+
+  handleTextArea = text => {
+    text = text.replace(/\s+/g, '')
+    let arr_text = text.split(',')  
+  
+    return arr_text
+  }
+
+  setOpen = (val) => {
+    this.setState({dialog_open: val})
+  }
+
+  handleClickOpen = () => {
+    this.setOpen(true);
+  };
+
+  handleClose = () => {
+    this.setOpen(false);
+  };
+
+  setDialogMsg = (title,msg) => {
+    this.setState({dialog_title:title,dialog_patient: msg})
+    this.setOpen(true)
+  };
+
   render() {
       const err_msgs = ["Éste campo es obligatorio", "Formato Incorrecto"]
       const occupations = this.state.occupations
       const civil_status = this.state.civil_status
-      const occupation_items = []
-      const cv_status_items = [] 
+      let occupation_items = []
+      let cv_status_items = [] 
 
-      for(var idx in occupations){
-        
-          occupation_items.push(<MenuItem value={idx}>{occupations[idx]}</MenuItem>)
-        
-      }    
+      occupation_items = this.fillMenuItem(occupations)
+      
+      cv_status_items = this.fillMenuItem(civil_status)
+
     return (
       <>
         <div className="content">
@@ -94,28 +139,36 @@ class NewPatient extends React.Component {
                   <CardBody>
                   <Formik
                     initialValues={{  
-                    nombre:"Gustavo",
-                    apellido_paterno: "Torreblanca",
-                    apellido_materno: "Faces",
+                    nombre:"",
+                    apellido_paterno: "",
+                    apellido_materno: "",
                     fecha_nacimiento: "1996-04-22",
-                    genero: "Masculino",
-                    curp: "TOFJ960422HDFRCS02",
-                    email: "alexis_torreblanca@outlook.com",
-                    telefono_celular: 5544864569,
+                    genero: "",
+                    curp: "",
+                    email: "",
+                    telefono_celular: "",
                     ocupacion: "1",
                     estado_civil: "1",
-                    enfermedades_recientes: ["Gripa"],
-                    medicamentos: null,
-                    enfermedades_cronicas: ["algo", "algo"],
-                    enfermedades_hereditarias: null
+                    enfermedades_recientes: "",
+                    medicamentos: "",
+                    enfermedades_cronicas: "",
+                    enfermedades_hereditarias: ""
                   }}
                     onSubmit={async values => {
                       await new Promise(resolve => setTimeout(resolve, 500));
-                      alert(JSON.stringify(values, null, 2));
+                      alert(JSON.stringify(values,null,1))
+                      /*Axios.post('http://localhost:8080/patient', values)
+                      .then(res => {
+                        this.setDialogPatient('Registro Exitoso','El paciente ' + values.nombre + ' ha sido registrado de manera correcta.')
+                      })
+                      .catch(error => {
+                        this.setDialogPatient('Error','Hubo un error al registrar el paciente.')
+                        console.log(error)
+                      })*/
                     }}
                     validationSchema={Yup.object().shape({
                       email: Yup.string()
-                        .email()
+                        .email('Formato de correo incorrecto')
                         .required(err_msgs[0]),
                       nombre: Yup.string()
                         .matches(/^[a-zA-Z]+$/,err_msgs[1])
@@ -128,9 +181,20 @@ class NewPatient extends React.Component {
                         .required(err_msgs[0]),
                       curp: Yup.string()
                         .matches(/^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$/,err_msgs[1])
-                      .required(err_msgs[0])
-                        
-
+                      .required(err_msgs[0]),
+                      telefono_celular: Yup.string()
+                        .matches(/^([0-9]{2})?[0-9]{8}$/,err_msgs[1])
+                        .required(err_msgs[0]),
+                      genero: Yup.string()
+                        .required(err_msgs[0]),
+                      medicamentos: Yup.string()
+                        .required(err_msgs[0]+'. En caso necesario escriba "Ninguna"'),
+                      enfermedades_cronicas: Yup.string()
+                        .required(err_msgs[0]+'. En caso necesario escriba "Ninguna"'),
+                      enfermedades_hereditarias: Yup.string()
+                        .required(err_msgs[0]+'. En caso necesario escriba "Ninguna"'),
+                      enfermedades_recientes: Yup.string()
+                        .required(err_msgs[0]+'. En caso necesario escriba "Ninguna"'),
                     })}
                   >
                     {props => {
@@ -159,11 +223,11 @@ class NewPatient extends React.Component {
                         value={values.nombre} 
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        error={errors.nombre 
+                        error={errors.nombre && touched.nombre
                           ? true 
                           : false}
                         helperText={
-                          errors.nombre ?
+                          errors.nombre && touched.nombre ?
                           errors.nombre :
                           ''
                         }
@@ -181,9 +245,14 @@ class NewPatient extends React.Component {
                         value={values.apellido_paterno}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        error={errors.apellido_paterno 
+                        error={errors.apellido_paterno && touched.apellido_paterno
                           ? true 
                           : false}
+                        helperText={
+                          errors.apellido_paterno && touched.apellido_paterno ?
+                          errors.apellido_paterno :
+                          ''
+                        }
                         fullWidth
                         />
                         </Col>
@@ -194,22 +263,16 @@ class NewPatient extends React.Component {
                         id="apellido_materno"
                         value={values.apellido_materno}
                         onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={
-                          errors.apellido_materno
-                          ? 'is-invalid'
-                          : ''
+                        error={errors.apellido_materno && touched.apellido_materno
+                          ? true 
+                          : false}
+                        helperText={
+                          errors.apellido_materno && touched.apellido_materno ?
+                          errors.apellido_materno :
+                          ''
                         }
                         fullWidth
-                        >
-                          {errors.apellido_materno 
-                          ? 
-                          (<div className="invalid-feedback">
-                            {errors.apellido_materno}
-                          </div>)
-                          : ""}
-                        
-                        </TextField>
+                        />
                         </Col>
                       </Row>
 
@@ -221,21 +284,16 @@ class NewPatient extends React.Component {
                         value={values.curp}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        className={
-                          errors.curp
-                          ? 'is-invalid'
-                          : ''
+                        error={errors.curp 
+                          ? true 
+                          : false}
+                        helperText={
+                          errors.curp ?
+                          errors.curp :
+                          ''
                         }
                         fullWidth
-                        >
-                          {errors.curp 
-                          ? 
-                          (<div className="invalid-feedback">
-                            {errors.curp}
-                          </div>)
-                          : ""}
-                        
-                        </TextField>
+                        />
                         </Col>
 
                         <Col md="6">
@@ -261,21 +319,16 @@ class NewPatient extends React.Component {
                         value={values.email}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        className={
-                          errors.email
-                          ? 'is-invalid'
-                          : ''
+                        error={errors.email 
+                          ? true 
+                          : false}
+                        helperText={
+                          errors.email ?
+                          errors.email :
+                          ''
                         }
                         fullWidth
-                        >
-                          {errors.email 
-                          ? 
-                          (<div className="invalid-feedback">
-                            {errors.email}
-                          </div>)
-                          : ""}
-                        
-                        </TextField>
+                        />
                         </Col>
 
                         <Col md="6">
@@ -285,21 +338,16 @@ class NewPatient extends React.Component {
                         value={values.telefono_celular}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        className={
-                          errors.telefono_celular
-                          ? 'is-invalid'
-                          : ''
+                        error={errors.telefono_celular 
+                          ? true 
+                          : false}
+                        helperText={
+                          errors.telefono_celular ?
+                          errors.telefono_celular :
+                          ''
                         }
                         fullWidth
-                        >
-                          {errors.telefono_celular 
-                          ? 
-                          (<div className="invalid-feedback">
-                            {errors.telefono_celular}
-                          </div>)
-                          : ""}
-                        
-                        </TextField>
+                        />
                         </Col>
                       </Row>
                       <Row>
@@ -335,42 +383,113 @@ class NewPatient extends React.Component {
 
                       <Row>
                         <Col md="6">
-                          <div className="icheck-material-main icheck-inline">
-                            <input type="radio" id="gender1" name="gender" />
-                            <label htmlFor="gender1">Masculino</label>
-                          </div>
-                          <br/>
-                          <div className="icheck-material-main icheck-inline">
-                            <input type="radio" id="gender2" name="gender" />
-                            <label htmlFor="gender2">Femenino</label>
-                          </div>
+                        <FormControl 
+                        error={errors.genero 
+                          ? true 
+                          : false}
+                          >
+                        <RadioGroup aria-label="Género" name="genero" 
+                        value={values.genero} 
+                        onChange={e => setFieldValue('genero', e.target.value)}
+                        onBlur={() => setFieldTouched('genero', true)}
+                        >
+                          <FormControlLabel value="Masculino" control={<Radio />} label="Masculino" />
+                          <FormControlLabel value="Femenino" control={<Radio />} label="Femenino" />
+                        </RadioGroup>
+                        {errors.genero ? (<FormHelperText>{errors.genero}</FormHelperText>) : ""}
+                        
+                        </FormControl>
                         </Col>
                       </Row>
 
                       <Row>
                         <Col md="6">
-                          <TextField multiline type="textarea" label="Medicamentos" fullWidth rows="5" size="medium"/>
+                          <TextField multiline type="textarea" 
+                          label="Medicamentos"
+                          id="medicamentos" 
+                          rows="5" 
+                          size="medium"
+                          value={values.medicamentos}
+                          onChange={e => setFieldValue('medicamentos', this.handleTextArea(e.target.value))}
+                          onBlur={handleBlur}
+                          error={errors.medicamentos 
+                            ? true 
+                            : false}
+                          helperText={
+                            errors.medicamentos ?
+                            errors.medicamentos :
+                            ''
+                          }
+                          fullWidth
+                          />
                         </Col>
 
                         <Col md="6">
-                          <TextField multiline type="textarea" label="Enfermedades crónicas" fullWidth rows="5" size="medium"/>
+                          <TextField multiline type="textarea" 
+                          label="Enfermedades crónicas" 
+                          id="enfermedades_cronicas"
+                          rows="5" 
+                          size="medium"
+                          value={values.enfermedades_cronicas}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={errors.enfermedades_cronicas 
+                            ? true 
+                            : false}
+                          helperText={
+                            errors.enfermedades_cronicas ?
+                            errors.enfermedades_cronicas :
+                            ''
+                          }
+                          fullWidth
+                          />
                         </Col>
                       </Row>
                       
                       <Row>
                         <Col md="6">
-                          <TextField multiline type="textarea" label="Enfermedades hereditarias" fullWidth rows="5" size="medium"/>
+                          <TextField multiline type="textarea" 
+                          label="Enfermedades hereditarias"
+                          rows="5" 
+                          value={values.enfermedades_hereditarias}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={errors.enfermedades_hereditarias 
+                            ? true 
+                            : false}
+                          helperText={
+                            errors.enfermedades_hereditarias ?
+                            errors.enfermedades_hereditarias :
+                            ''
+                          }
+                          fullWidth
+                          />
                         </Col>
 
                         <Col md="6">
-                          <TextField multiline type="textarea" label="Enfermedades recientes" fullWidth  rows="5" size="medium"/>
+                          <TextField multiline type="textarea" 
+                          label="Enfermedades recientes"
+                          rows="5" 
+                          value={values.enfermedades_recientes}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={errors.enfermedades_recientes 
+                            ? true 
+                            : false}
+                          helperText={
+                            errors.enfermedades_recientes ?
+                            errors.enfermedades_recientes :
+                            ''
+                          }
+                          fullWidth
+                          />
                         </Col>
                       </Row>
 
                       <Row>
                         <Col md="12">
                           <div className="pull-right">
-                          <Button variant="contained" size="large" color="warning">CANCELAR</Button>
+                          <Button onClick={handleReset} variant="contained" size="large" color="warning">CANCELAR</Button>
                           <span>  </span>
                           <Button  variant="contained" size="large" type="submit" color="primary">GUARDAR</Button>
                           </div>  
@@ -382,6 +501,24 @@ class NewPatient extends React.Component {
                     );
                   }}
                 </Formik>
+                <Dialog
+                  open={this.state.dialog_open}
+                  onClose={this.handleClose}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">{"Registro Exitoso"}</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      {this.state.dialog_message}
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={this.handleClose} color="primary" autoFocus>
+                      Aceptar
+                    </Button>
+                  </DialogActions>
+                </Dialog>
                   </CardBody>
                 </Card>
               </Col>

@@ -27,6 +27,14 @@ $white:                   #FFFFFF !default;
     background-color: lighten($warning-color, 5%) !important;
 }
 
+.MuiIconButton-colorSecondary {
+    color: $primary-color !important;
+}
+
+.MuiIconButton-colorSecondary.Mui-checked {
+    color: $primary-color !important;
+}
+
 .row{
     margin: 15px;
 }
