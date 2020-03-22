@@ -1,0 +1,32 @@
+$primary-color:         #43425D !default;
+$secondary-color:       #00635a !default;
+$warning-color:         #FF6565 !default;
+$warning-color-dark:    #B92D00 !default;
+$white:                   #FFFFFF !default;
+
+.btn.btn-secondary{
+    background-color: $secondary-color;
+    color: $white;
+}
+.btn.btn-secondary:hover{
+    background-color: darken($secondary-color, 5%);
+}
+
+.btn.btn-primary{
+    background-color: $primary-color;
+    color: $white;
+}
+.btn.btn-primary:hover{
+    background-color: darken($primary-color, 5%);
+}
+
+.btn.btn-warning{
+    background-color: $warning-color;
+}
+.btn.btn-warning:hover{
+    background-color: lighten($warning-color, 5%) !important;
+}
+
+.row{
+    margin: 15px;
+}
