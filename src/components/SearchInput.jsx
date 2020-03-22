@@ -23,30 +23,32 @@ class SearchInput extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-          show: false,
+          show: true,
           title: "Buscar "
         };
     }
     componentDidMount() {
-        if (window.location.pathname === "/admin/pacients") {
+
+        if (window.location.pathname === "/admin/patients") {
             this.setState({
-                show: !this.state.show,
+                show: true,
                 title: "Buscar Paciente"
             });
         }
         if (window.location.pathname === "/admin/appointments"){
             this.setState({
-                show: !this.state.show,
+                show: true,
                 title: "Buscar Cita"
             });
         }else{
             this.setState({
-                show: !false,
+                show: false,
             });
         }
     }
 
     render () {
+        if(this.state.show == true){
         return <form>
             <InputGroup className="no-border">
             <Input placeholder={this.state.title}/>
@@ -57,6 +59,7 @@ class SearchInput extends React.Component{
             </InputGroupAddon>
             </InputGroup>
         </form>
+        }else {return <p>{this.state.show}</p>}
     }
 }
 
