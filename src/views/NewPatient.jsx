@@ -52,7 +52,7 @@ class NewPatient extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      date: new Date().toJSON(),
+      date: new Date('2014-08-18T21:11:54'),
       occupations : [],
       civil_status: [],
       dialog_open: false,
@@ -87,7 +87,6 @@ class NewPatient extends React.Component {
   }
 
   handleTextArea = text => {
-    text = text.replace(/\s+/g, '')
     let arr_text = text.split(',')  
   
     return arr_text
@@ -106,7 +105,7 @@ class NewPatient extends React.Component {
   };
 
   setDialogMsg = (title,msg) => {
-    this.setState({dialog_title:title,dialog_patient: msg})
+    this.setState({dialog_title: title,dialog_message: msg})
     this.setOpen(true)
   };
 
@@ -142,7 +141,7 @@ class NewPatient extends React.Component {
                     nombre:"",
                     apellido_paterno: "",
                     apellido_materno: "",
-                    fecha_nacimiento: "1996-04-22",
+                    fecha_nacimiento: "1990-01-01T12:00:00",
                     genero: "",
                     curp: "",
                     email: "",
@@ -157,14 +156,14 @@ class NewPatient extends React.Component {
                     onSubmit={async values => {
                       await new Promise(resolve => setTimeout(resolve, 500));
                       alert(JSON.stringify(values,null,1))
-                      /*Axios.post('http://localhost:8080/patient', values)
+                      Axios.post('http://localhost:8080/patient', values)
                       .then(res => {
-                        this.setDialogPatient('Registro Exitoso','El paciente ' + values.nombre + ' ha sido registrado de manera correcta.')
+                        this.setDialogMsg('Registro Exitoso','El paciente ' + values.nombre + ' ha sido registrado de manera correcta.')
                       })
                       .catch(error => {
-                        this.setDialogPatient('Error','Hubo un error al registrar el paciente.')
+                        this.setDialogMsg('Error','Hubo un error al registrar el paciente.')
                         console.log(error)
-                      })*/
+                      })
                     }}
                     validationSchema={Yup.object().shape({
                       email: Yup.string()
@@ -259,10 +258,11 @@ class NewPatient extends React.Component {
 
                         <Col md="6">
                         <TextField type="text" 
-                        label="Apellido Materno" 
+                        label="Apellido Materno"
                         id="apellido_materno"
                         value={values.apellido_materno}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                         error={errors.apellido_materno && touched.apellido_materno
                           ? true 
                           : false}
@@ -284,11 +284,11 @@ class NewPatient extends React.Component {
                         value={values.curp}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        error={errors.curp 
+                        error={errors.curp && touched.curp
                           ? true 
                           : false}
                         helperText={
-                          errors.curp ?
+                          errors.curp && touched.curp?
                           errors.curp :
                           ''
                         }
@@ -319,11 +319,11 @@ class NewPatient extends React.Component {
                         value={values.email}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        error={errors.email 
+                        error={errors.email && touched.email
                           ? true 
                           : false}
                         helperText={
-                          errors.email ?
+                          errors.email && touched.email ?
                           errors.email :
                           ''
                         }
@@ -338,11 +338,11 @@ class NewPatient extends React.Component {
                         value={values.telefono_celular}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        error={errors.telefono_celular 
+                        error={errors.telefono_celular && touched.telefono_celular
                           ? true 
                           : false}
                         helperText={
-                          errors.telefono_celular ?
+                          errors.telefono_celular && touched.telefono_celular ?
                           errors.telefono_celular :
                           ''
                         }
@@ -384,7 +384,7 @@ class NewPatient extends React.Component {
                       <Row>
                         <Col md="6">
                         <FormControl 
-                        error={errors.genero 
+                        error={errors.genero && touched.genero
                           ? true 
                           : false}
                           >
@@ -396,7 +396,7 @@ class NewPatient extends React.Component {
                           <FormControlLabel value="Masculino" control={<Radio />} label="Masculino" />
                           <FormControlLabel value="Femenino" control={<Radio />} label="Femenino" />
                         </RadioGroup>
-                        {errors.genero ? (<FormHelperText>{errors.genero}</FormHelperText>) : ""}
+                        {errors.genero && touched.genero ? (<FormHelperText>{errors.genero}</FormHelperText>) : ""}
                         
                         </FormControl>
                         </Col>
@@ -412,11 +412,11 @@ class NewPatient extends React.Component {
                           value={values.medicamentos}
                           onChange={e => setFieldValue('medicamentos', this.handleTextArea(e.target.value))}
                           onBlur={handleBlur}
-                          error={errors.medicamentos 
+                          error={errors.medicamentos && touched.medicamentos
                             ? true 
                             : false}
                           helperText={
-                            errors.medicamentos ?
+                            errors.medicamentos && touched.medicamentos ?
                             errors.medicamentos :
                             ''
                           }
@@ -431,13 +431,13 @@ class NewPatient extends React.Component {
                           rows="5" 
                           size="medium"
                           value={values.enfermedades_cronicas}
-                          onChange={handleChange}
+                          onChange={e => setFieldValue('enfermedades_cronicas', this.handleTextArea(e.target.value))}
                           onBlur={handleBlur}
-                          error={errors.enfermedades_cronicas 
+                          error={errors.enfermedades_cronicas && touched.enfermedades_cronicas
                             ? true 
                             : false}
                           helperText={
-                            errors.enfermedades_cronicas ?
+                            errors.enfermedades_cronicas && touched.enfermedades_cronicas?
                             errors.enfermedades_cronicas :
                             ''
                           }
@@ -450,15 +450,16 @@ class NewPatient extends React.Component {
                         <Col md="6">
                           <TextField multiline type="textarea" 
                           label="Enfermedades hereditarias"
-                          rows="5" 
+                          rows="5"
+                          id="enfermedades_hereditarias" 
                           value={values.enfermedades_hereditarias}
-                          onChange={handleChange}
+                          onChange={e => setFieldValue('enfermedades_hereditarias', this.handleTextArea(e.target.value))}
                           onBlur={handleBlur}
-                          error={errors.enfermedades_hereditarias 
+                          error={errors.enfermedades_hereditarias && touched.enfermedades_hereditarias
                             ? true 
                             : false}
                           helperText={
-                            errors.enfermedades_hereditarias ?
+                            errors.enfermedades_hereditarias && touched.enfermedades_hereditarias ?
                             errors.enfermedades_hereditarias :
                             ''
                           }
@@ -469,15 +470,16 @@ class NewPatient extends React.Component {
                         <Col md="6">
                           <TextField multiline type="textarea" 
                           label="Enfermedades recientes"
+                          id="enfermedades_recientes"
                           rows="5" 
                           value={values.enfermedades_recientes}
-                          onChange={handleChange}
+                          onChange={e => setFieldValue('enfermedades_recientes', this.handleTextArea(e.target.value))}
                           onBlur={handleBlur}
-                          error={errors.enfermedades_recientes 
+                          error={errors.enfermedades_recientes && touched.enfermedades_recientes
                             ? true 
                             : false}
                           helperText={
-                            errors.enfermedades_recientes ?
+                            errors.enfermedades_recientes && touched.enfermedades_recientes ?
                             errors.enfermedades_recientes :
                             ''
                           }
@@ -507,7 +509,7 @@ class NewPatient extends React.Component {
                   aria-labelledby="alert-dialog-title"
                   aria-describedby="alert-dialog-description"
                 >
-                  <DialogTitle id="alert-dialog-title">{"Registro Exitoso"}</DialogTitle>
+                  <DialogTitle id="alert-dialog-title">{this.state.dialog_title}</DialogTitle>
                   <DialogContent>
                     <DialogContentText id="alert-dialog-description">
                       {this.state.dialog_message}
