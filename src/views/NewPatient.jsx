@@ -100,6 +100,11 @@ class NewPatient extends React.Component {
     this.setOpen(true);
   };
 
+  handleDialogClick = () => {
+    this.setOpen(false);
+    this.props.history.push('/admin/patients')
+  }
+
   handleClose = () => {
     this.setOpen(false);
   };
@@ -155,7 +160,6 @@ class NewPatient extends React.Component {
                   }}
                     onSubmit={async values => {
                       await new Promise(resolve => setTimeout(resolve, 500));
-                      alert(JSON.stringify(values,null,1))
                       Axios.post('http://localhost:8080/patient', values)
                       .then(res => {
                         this.setDialogMsg('Registro Exitoso','El paciente ' + values.nombre + ' ha sido registrado de manera correcta.')
@@ -516,7 +520,7 @@ class NewPatient extends React.Component {
                     </DialogContentText>
                   </DialogContent>
                   <DialogActions>
-                    <Button onClick={this.handleClose} color="primary" autoFocus>
+                    <Button onClick={this.handleDialogClick} color="primary" autoFocus>
                       Aceptar
                     </Button>
                   </DialogActions>
