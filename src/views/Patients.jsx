@@ -28,6 +28,11 @@ import {
 import { NavLink } from "react-router-dom";
 import { Nav } from "reactstrap";
 import Axios from 'axios';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 
 class Patients extends React.Component {
@@ -35,19 +40,32 @@ class Patients extends React.Component {
 		super(props);
         this.state = {
           patients : [],
+          dialog_open: false,
+          dialog_title: "",
+          dialog_message: "",
+          id_to_delete: -1
         };
-      }
+    }
 
     async componentDidMount() {
       const {data} = await Axios.get('http://localhost:8080/patient/list?nombre=all&curp=all');
 	    this.setState({patients: data});
-	}
+    }
+    
+    setDialogOpen = (val) => {
+      this.setState({dialog_open: val})
+    }
+
+    setDialogMsg = (title,msg) => {
+      this.setState({dialog_title: title,dialog_message: msg})
+      this.setDialogOpen(true)
+    }
 	
-	async deletePatient(){
+	  async deletePatient(){
 		let payload = {
 			id : this.idpatient
-		};
-
+    }
+    
 		console.log(payload)
 
 		await Axios.delete('http://localhost:8080/patient', { data: payload });
@@ -60,13 +78,42 @@ class Patients extends React.Component {
 		//	}
 		//}
 		//this.setState({patients: patientsListCopy}); // we update state
-  }
-  
-  handleDelete = event => {
-    event.preventDefault();
+    }
+
+    setIdToDelete = (id) => {
+      this.setState({id_to_delete: id})
+    }
+
+    handleClose = () => {
+      this.setDialogOpen(false)
+    }
+
+    handleDeleteClick = event => {
+      let id = event.target.id
+      let name = this.state.patients.map((item) => {
+        if(item.id_paciente == id){
+          return item.nombre
+        }
+      })
+
+      this.setDialogOpen(true)
+      this.setDialogMsg('¿Estás seguro de borrar a este paciente?', `Los datos de ${name} serán eliminados permanentemente y no podrán ser recuperados.`)
+      this.setIdToDelete(id)
+    }
     
-    Axios.delete('http://localhost:8080/patient', { params: {id: event.target.id} });
-  }
+    handleDelete = event => {
+      event.preventDefault();
+      let id = this.state.id_to_delete
+      let new_patients = this.state.patients.filter((item) => item.id_paciente !== id)
+
+      alert(JSON.stringify(new_patients))
+      
+      /*Axios.delete('http://localhost:8080/patient', { params: {id: id} })
+      .then(res => {
+        this.setDialogOpen(false)
+        this.setState({patients: new_patients})
+      })*/
+    }
       
   render() {
     return (
@@ -110,7 +157,7 @@ class Patients extends React.Component {
                             <td>
                               <Button id={patient.id_paciente} onClick={this.handleEdit}>Editar</Button>
                               <span/>
-                              <Button id={patient.id_paciente} onClick={this.handleDelete} color="warning">Borrar</Button>
+                              <Button id={patient.id_paciente} onClick={this.handleDeleteClick} color="warning">Borrar</Button>
                             </td>
                           </tr>
                         )
@@ -120,7 +167,26 @@ class Patients extends React.Component {
                 </CardBody>
               </Card>
             </Col>
-            </Row>    
+            </Row>
+            <Dialog
+                  open={this.state.dialog_open}
+                  onClose={this.handleClose}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">{this.state.dialog_title}</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      {this.state.dialog_message}
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={this.handleClose} color="warning">Cancelar</Button>
+                    <Button onClick={this.handleDelete} color="primary" autoFocus>
+                      Aceptar
+                    </Button>
+                  </DialogActions>
+                </Dialog> 
             
           
         </div>
