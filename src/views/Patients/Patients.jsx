@@ -159,7 +159,7 @@ class Patients extends React.Component {
                       
                       {this.state.patients.map((patient) => {
                         return (
-                          <tr key={patient.id_paciente} value={patient.id_paciente} onClick={(e) => this.handleItemClick(e,patient)}>
+                          <tr key={patient.id_paciente} onClick={(e) => this.handleItemClick(e,patient)}>
                             <td>{patient.curp}</td>
 							              <td>{patient.nombre}</td>
                             <td>{patient.fecha_nacimiento}</td>
