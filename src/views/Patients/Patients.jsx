@@ -27,12 +27,12 @@ import {
 } from "reactstrap";
 import { NavLink } from "react-router-dom";
 import { Nav } from "reactstrap";
-import Axios from 'axios';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import API from 'api'
 
 
 class Patients extends React.Component {
@@ -48,7 +48,7 @@ class Patients extends React.Component {
     }
 
     async componentDidMount() {
-      const {data} = await Axios.get('http://localhost:8080/patient/list?nombre=all&curp=all');
+      const {data} = await API.get('patient/list?nombre=all&curp=all');
 	    this.setState({patients: data});
     }
     
@@ -68,7 +68,7 @@ class Patients extends React.Component {
     
 		console.log(payload)
 
-		await Axios.delete('http://localhost:8080/patient', { data: payload });
+		await API.delete('patient', { data: payload });
 		//let patientsListCopy = this.state.patients; // grab a copy of the todo list
 		//for (let i = 0; i < patientsListCopy.length; i++) {
 		//	let patient = patientsListCopy[i];
@@ -90,11 +90,14 @@ class Patients extends React.Component {
 
     handleDeleteClick = event => {
       let id = event.target.id
-      let name = this.state.patients.map((item) => {
+      let name
+      this.state.patients.map((item) => {
         if(item.id_paciente == id){
-          return item.nombre
+          name = item.nombre
         }
       })
+
+      console.log(name)
 
       this.setDialogOpen(true)
       this.setDialogMsg('¿Estás seguro de borrar a este paciente?', `Los datos de ${name} serán eliminados permanentemente y no podrán ser recuperados.`)
@@ -103,16 +106,22 @@ class Patients extends React.Component {
     
     handleDelete = event => {
       event.preventDefault();
-      let id = this.state.id_to_delete
-      let new_patients = this.state.patients.filter((item) => item.id_paciente !== id)
 
-      alert(JSON.stringify(new_patients))
+      let id = this.state.id_to_delete
       
-      /*Axios.delete('http://localhost:8080/patient', { params: {id: id} })
+      let new_patients = this.state.patients.filter((item) => item.id_paciente != id)
+      
+      API.delete('patient', { params: {id: id} })
       .then(res => {
         this.setDialogOpen(false)
         this.setState({patients: new_patients})
-      })*/
+      })
+    }
+
+    handleItemClick = (event,patient) => {
+      event.preventDefault()
+
+      console.log('Has clickeado ' + patient.id_paciente)
     }
       
   render() {
@@ -125,7 +134,7 @@ class Patients extends React.Component {
                 </Col>
                 <Col md="4">
                     <Nav>
-                      <NavLink className="btn btn-success" to="/admin/new_patient">
+                      <NavLink className="btn btn-secondary" to="/admin/new_patient">
                         Nuevo Paciente
                       </NavLink>
                     </Nav>
@@ -135,7 +144,7 @@ class Patients extends React.Component {
             <Col md="12">
               <Card>
                 <CardBody>
-                  <Table responsive>
+                  <Table responsive className="clickable">
                     <thead className="text-primary">
                       <tr>
                         <th>CURP</th>
@@ -147,21 +156,23 @@ class Patients extends React.Component {
                     </thead>
                     <tbody>
                       
-                      {this.state.patients.map((patient, idx) => {
+                      
+                      {this.state.patients.map((patient) => {
                         return (
-                          <tr key={idx}>
+                          <tr key={patient.id_paciente} value={patient.id_paciente} onClick={(e) => this.handleItemClick(e,patient)}>
                             <td>{patient.curp}</td>
 							              <td>{patient.nombre}</td>
                             <td>{patient.fecha_nacimiento}</td>
                             <td>{patient.email}</td>
                             <td>
                               <Button id={patient.id_paciente} onClick={this.handleEdit}>Editar</Button>
-                              <span/>
+                              <span>  </span>
                               <Button id={patient.id_paciente} onClick={this.handleDeleteClick} color="warning">Borrar</Button>
                             </td>
                           </tr>
                         )
                       })}
+                      
                     </tbody>
                   </Table>
                 </CardBody>

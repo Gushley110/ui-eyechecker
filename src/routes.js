@@ -19,9 +19,9 @@
 
 import Typography from "views/Typography.jsx";
 import Home from "views/Home.jsx";
-import Patients from "views/Patients.jsx";
+import Patients from "views/Patients/Patients.jsx";
 import Appointments from "views/Appointments";
-import NewPatient from "views/NewPatient";
+import NewPatient from "views/Patients/NewPatient";
 
 var routes = [
   /*{

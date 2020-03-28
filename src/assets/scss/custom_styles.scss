@@ -1,5 +1,5 @@
 $primary-color:         #43425D !default;
-$secondary-color:       #00635a !default;
+$secondary-color:       #009688 !default;
 $warning-color:         #FF6565 !default;
 $warning-color-dark:    #B92D00 !default;
 $white:                   #FFFFFF !default;
@@ -8,22 +8,22 @@ $white:                   #FFFFFF !default;
     background-color: $secondary-color;
     color: $white;
 }
-.btn.btn-secondary:hover{
-    background-color: darken($secondary-color, 5%);
+.btn.btn-secondary:hover,.btn.btn-secondary:focus{
+    background-color: darken($secondary-color, 5%)!important;
 }
 
 .btn.btn-primary{
     background-color: $primary-color;
     color: $white;
 }
-.btn.btn-primary:hover{
-    background-color: darken($primary-color, 5%);
+.btn.btn-primary:hover,.btn.btn-primary:focus{
+    background-color: darken($primary-color, 5%)!important;
 }
 
 .btn.btn-warning{
     background-color: $warning-color;
 }
-.btn.btn-warning:hover{
+.btn.btn-warning:hover,.btn.btn-warning:focus{
     background-color: lighten($warning-color, 5%) !important;
 }
 
@@ -37,4 +37,12 @@ $white:                   #FFFFFF !default;
 
 .row{
     margin: 15px;
+}
+
+table.clickable tr{
+    cursor: pointer;
+}
+
+table.clickable tr:hover{
+    background-color: darken($white,3%);
 }

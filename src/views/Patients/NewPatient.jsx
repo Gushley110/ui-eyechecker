@@ -39,13 +39,13 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Axios from 'axios';
 import { FormControl, FormHelperText } from "@material-ui/core";
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import API from 'api'
 // core components
 
 class NewPatient extends React.Component {
@@ -63,8 +63,8 @@ class NewPatient extends React.Component {
 
   async componentDidMount() {
     
-    const req_occupations = await Axios.get('http://localhost:8080/list/catalogue/ocupacion');
-    const req_cv_status = await Axios.get('http://localhost:8080/list/catalogue/estado_civil');
+    const req_occupations = await API.get('list/catalogue/ocupacion');
+    const req_cv_status = await API.get('list/catalogue/estado_civil');
     
     let occupations = req_occupations.data
     let cv_status = req_cv_status.data
@@ -160,7 +160,7 @@ class NewPatient extends React.Component {
                   }}
                     onSubmit={async values => {
                       await new Promise(resolve => setTimeout(resolve, 500));
-                      Axios.post('http://localhost:8080/patient', values)
+                      API.post('patient', values)
                       .then(res => {
                         this.setDialogMsg('Registro Exitoso','El paciente ' + values.nombre + ' ha sido registrado de manera correcta.')
                       })
@@ -174,13 +174,13 @@ class NewPatient extends React.Component {
                         .email('Formato de correo incorrecto')
                         .required(err_msgs[0]),
                       nombre: Yup.string()
-                        .matches(/^[a-zA-Z]+$/,err_msgs[1])
+                        .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñ]+$/,err_msgs[1])
                         .required(err_msgs[0]),
                       apellido_paterno: Yup.string()
-                        .matches(/^[a-zA-Z]+$/,err_msgs[1])
+                        .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñ]+$/,err_msgs[1])
                         .required(err_msgs[0]),
                       apellido_materno: Yup.string()
-                        .matches(/^[a-zA-Z]+$/,err_msgs[1])
+                        .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñ]+$/,err_msgs[1])
                         .required(err_msgs[0]),
                       curp: Yup.string()
                         .matches(/^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$/,err_msgs[1])
@@ -205,8 +205,6 @@ class NewPatient extends React.Component {
                       values,
                       touched,
                       errors,
-                      dirty,
-                      isSubmitting,
                       handleChange,
                       handleBlur,
                       handleSubmit,
