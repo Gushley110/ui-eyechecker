@@ -4,6 +4,34 @@ $warning-color:         #FF6565 !default;
 $warning-color-dark:    #B92D00 !default;
 $white:                   #FFFFFF !default;
 
+html, body, #app, #app>div {
+    height: 100%
+  }
+
+body > #root > div {
+height: 100vh;
+}
+
+.login-container {
+    background-color: $white;
+    height: 100%;
+    display: table;
+}
+
+.login-title{
+    font-weight: 700;
+    text-align: center;
+}
+
+.form-container{
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.background-image{
+    background: url("../img/background.png") 100%;
+}
+
 .btn.btn-secondary{
     background-color: $secondary-color;
     color: $white;
@@ -25,6 +53,24 @@ $white:                   #FFFFFF !default;
 }
 .btn.btn-warning:hover,.btn.btn-warning:focus{
     background-color: lighten($warning-color, 5%) !important;
+}
+
+.MuiButton-root{
+    text-transform: none!important;
+    padding: 6px 30px!important;
+}
+
+.MuiButton-containedPrimary {
+    color: #fff;
+    background-color: $primary-color !important;
+}
+
+.MuiButton-containedPrimary:hover {
+    background-color: darken($primary-color, 5%)!important;
+}
+
+.MuiButton-outlinedPrimary {
+    color: $primary-color !important;
 }
 
 .MuiIconButton-colorSecondary {

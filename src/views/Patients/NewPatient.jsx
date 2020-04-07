@@ -158,6 +158,7 @@ class NewPatient extends React.Component {
                     enfermedades_cronicas: "",
                     enfermedades_hereditarias: ""
                   }}
+                  
                     onSubmit={async values => {
                       await new Promise(resolve => setTimeout(resolve, 500));
                       API.post('patient', values)
@@ -169,6 +170,7 @@ class NewPatient extends React.Component {
                         console.log(error)
                       })
                     }}
+
                     validationSchema={Yup.object().shape({
                       email: Yup.string()
                         .email('Formato de correo incorrecto')
@@ -307,6 +309,7 @@ class NewPatient extends React.Component {
                           format="yyyy/MM/dd"
                           value={values.fecha_nacimiento}
                           onChange={value => setFieldValue('fecha_nacimiento',value)}
+                          onBlur={()=> setFieldTouched('fecha_nacimiento', true)}
                           fullWidth
                         />
                         </MuiPickersUtilsProvider>

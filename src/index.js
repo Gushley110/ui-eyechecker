@@ -30,14 +30,18 @@ import 'assets/scss/icheck-material/icheck-material.scss';
 import 'assets/scss/custom_styles.scss'
 
 import AdminLayout from "layouts/Admin.jsx";
+import Login from "views/Login/Login.jsx"
+import Register from "views/Login/Register";
 
 const hist = createBrowserHistory();
 
 ReactDOM.render(
   <Router history={hist}>
     <Switch>
+      <Route path="/login" component={Login} />
+      <Route path="/register" component={Register} />
       <Route path="/admin" render={props => <AdminLayout {...props} />} />
-      <Redirect to="/admin/home" />
+      <Redirect to="/login"></Redirect>
     </Switch>
   </Router>,
   document.getElementById("root")
