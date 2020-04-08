@@ -59,26 +59,7 @@ class Patients extends React.Component {
     setDialogMsg = (title,msg) => {
       this.setState({dialog_title: title,dialog_message: msg})
       this.setDialogOpen(true)
-    }
-	
-	  async deletePatient(){
-		let payload = {
-			id : this.idpatient
-    }
-    
-		console.log(payload)
-
-		await API.delete('patient', { data: payload });
-		//let patientsListCopy = this.state.patients; // grab a copy of the todo list
-		//for (let i = 0; i < patientsListCopy.length; i++) {
-		//	let patient = patientsListCopy[i];
-		//	if (patient.id_paciente === this.idPatient) {        // if it’s the correct ID...
-		//	patientsListCopy.splice(i, 1)  // delete the item
-		//	break                      // we’re done! break the loop
-		//	}
-		//}
-		//this.setState({patients: patientsListCopy}); // we update state
-    }
+    }		  
 
     setIdToDelete = (id) => {
       this.setState({id_to_delete: id})
@@ -89,6 +70,8 @@ class Patients extends React.Component {
     }
 
     handleDeleteClick = event => {
+      event.preventDefault()
+
       let id = event.target.id
       let name
       this.state.patients.map((item) => {

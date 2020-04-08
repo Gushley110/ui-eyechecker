@@ -28,6 +28,8 @@ import "assets/demo/demo.css";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 import 'assets/scss/icheck-material/icheck-material.scss';
 import 'assets/scss/custom_styles.scss'
+import Grow from '@material-ui/core/Grow';
+import Zoom from '@material-ui/core/Zoom';
 
 import AdminLayout from "layouts/Admin.jsx";
 import Login from "views/Login/Login.jsx"
