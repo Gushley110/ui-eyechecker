@@ -12,6 +12,14 @@ body > #root > div {
 height: 100vh;
 }
 
+label#cedula-label{
+    line-height: 2.2em;
+}
+
+input#cedula{
+    height: 2.2em;
+}
+
 .login-container {
     background-color: $white;
     height: 100%;

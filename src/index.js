@@ -34,6 +34,7 @@ import Zoom from '@material-ui/core/Zoom';
 import AdminLayout from "layouts/Admin.jsx";
 import Login from "views/Login/Login.jsx"
 import Register from "views/Login/Register";
+import Recover from "views/Login/Recover";
 
 const hist = createBrowserHistory();
 
@@ -42,6 +43,7 @@ ReactDOM.render(
     <Switch>
       <Route path="/login" component={Login} />
       <Route path="/register" component={Register} />
+      <Route path="/password_recover" component={Recover} />
       <Route path="/admin" render={props => <AdminLayout {...props} />} />
       <Redirect to="/login"></Redirect>
     </Switch>

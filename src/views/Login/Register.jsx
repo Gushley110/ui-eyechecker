@@ -96,6 +96,7 @@ class Register extends React.Component{
                       API.post('doctor', values)
                       .then(res => {
                         console.log(res)
+                        this.props.history.push('\login')
                         //this.setDialogMsg('Registro Exitoso','El paciente ' + values.nombre + ' ha sido registrado de manera correcta.')
                       })
                       .catch(error => {

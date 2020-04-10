@@ -19,10 +19,9 @@
 
 import Typography from "views/Typography.jsx";
 import Home from "views/Home.jsx";
-import Patients from "views/Patients/Patients.jsx";
+import { Patients, NewPatient, EditPatient } from "views/Patients";
+import { Account } from "views/Account/Account";
 import Appointments from "views/Appointments";
-import NewPatient from "views/Patients/NewPatient";
-import Login from "views/Login/Login";
 
 var routes = [
   /*{
@@ -99,7 +98,7 @@ var routes = [
     path: "/account",
     name: "Mi cuenta",
     icon: "nc-icon nc-settings-gear-65",
-    component: Typography,
+    component: Account,
     layout: "/admin"
   },
   {
@@ -108,11 +107,6 @@ var routes = [
     icon: "nc-icon nc-single-02",
     component: NewPatient,
     layout: "/admin"
-  },
-  {
-    path: "/login",
-    name: "Iniciar Sesión",
-    component: Login,
   }
   /*{
     pro: true,
