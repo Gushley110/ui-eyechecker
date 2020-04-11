@@ -23,7 +23,7 @@ input#cedula{
 .login-container {
     background-color: $white;
     height: 100%;
-    display: table;
+    display: table!important;
 }
 
 .login-title{

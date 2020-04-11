@@ -36,6 +36,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { TimePicker } from "@material-ui/pickers";
 import esLocale from "date-fns/locale/es";
 import API from 'api'
+import Alert from '@material-ui/lab/Alert';
 
 import { Route, Switch } from "react-router-dom";
 import routes from "routes.js";
@@ -44,7 +45,8 @@ class Recover extends React.Component{
     constructor(props){
         super(props)
         this.state = {
-            remember: false
+            alert: "success",
+            response: "",
         }
     }
 
@@ -77,30 +79,29 @@ class Recover extends React.Component{
                     <Col md="12">
                     <Formik
                     initialValues={{  
-                    usuario: "",
-                    email: ""
+                    usuario: ""
                   }}
                   
                     onSubmit={async values => {
                       await new Promise(resolve => setTimeout(resolve, 500));
 
-                      
-                      
-                      /*API.post('doctor', values)
+                      alert(JSON.stringify(values))
+
+                      API.post('account/password/recover', values)
                       .then(res => {
                         console.log(res)
-                        this.props.history.push('\login')
+                        this.setState({response: res.data.status})
                         //this.setDialogMsg('Registro Exitoso','El paciente ' + values.nombre + ' ha sido registrado de manera correcta.')
                       })
                       .catch(error => {
+                        console.log(error)
+                        //this.setState({response: error})
                         //this.setDialogMsg('Error','Hubo un error al registrar el paciente.')
                         //console.log(error)
-                      })*/
+                      })
                     }}
 
                     validationSchema={Yup.object().shape({
-                      email: Yup.string()
-                        .email('Formato de correo incorrecto'),
                       usuario: Yup.string()
                         .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñ0-9]+$/,err_msgs[1])
                         .required(err_msgs[0])
@@ -126,7 +127,7 @@ class Recover extends React.Component{
                           
                         <TextField type="text" 
                         label="Nombre de usuario" 
-                        id="nombre"
+                        id="usuario"
                         value={values.usuario} 
                         onChange={handleChange}
                         onBlur={handleBlur}
@@ -152,6 +153,13 @@ class Recover extends React.Component{
                           <Button onClick={handleSubmit} variant="contained" size="large" type="submit" color="primary">Enviar</Button>
                           </center>
                         </Col>
+                      </Row>
+
+                      <Row>
+                        <Col md="12">
+                          <Alert severity={this.state.alert}>{this.state.response}</Alert>
+                        </Col>
+                        
                       </Row>
 
                       
