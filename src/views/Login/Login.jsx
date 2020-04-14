@@ -1,8 +1,6 @@
 import React from 'react'
 
 import {
-    Card,
-    CardBody,
     Form,
     Row,
     Col
@@ -15,15 +13,17 @@ import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
+import Alert from '@material-ui/lab/Alert';
 
-import { Route, Switch } from "react-router-dom";
-import routes from "routes.js";
+import API from 'api'
 
 class Login extends React.Component{
     constructor(props){
         super(props)
         this.state = {
-            remember: false
+            remember: false,
+            alert: "error",
+            alert_show: false
         }
     }
 
@@ -53,18 +53,18 @@ class Login extends React.Component{
                         initialValues={{  
                             usuario:"",
                             password:"",
-                            recordar: false
                         }}
                         onSubmit={async values => {
                             await new Promise(resolve => setTimeout(resolve, 500));
-                            /*API.post('patient', values)
+
+                            API.post('login', values)
                             .then(res => {
-                              this.setDialogMsg('Registro Exitoso','El paciente ' + values.nombre + ' ha sido registrado de manera correcta.')
+                                this.setState({response: 'Loggeado', alert_show: true, alert:"success"})
                             })
                             .catch(error => {
-                              this.setDialogMsg('Error','Hubo un error al registrar el paciente.')
+                              this.setState({response: 'El nombre de usuario o contraseña son incorrectos', alert_show: true, alert:"error"})
                               console.log(error)
-                            })*/
+                            })
                             alert(JSON.stringify(values))
                             console.log("clicked")
                           }}
@@ -163,7 +163,18 @@ class Login extends React.Component{
                     </Formik>
                     </Col>
                     <Col md="1"/>
+                    
                 </Row>
+                <Row>
+                        <Col md="12">
+                          {this.state.alert_show ? 
+                          <Alert severity={this.state.alert}>{this.state.response}</Alert> :
+                          null}
+
+                          
+                        </Col>
+                        
+                      </Row>
                 </div>
                 
             </Container>

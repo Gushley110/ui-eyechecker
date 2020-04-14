@@ -22,9 +22,11 @@ import Home from "views/Home.jsx";
 import Patients from "views/Patients/Patients.jsx";
 import Appointments from "views/Appointments";
 import NewPatient from "views/Patients/NewPatient";
+import DetailPatient from "views/Patients/DetailPatient";
 import Account from "views/Account/Account"
 
 import Login from "views/Login/Login";
+import Analysis from "views/Patients/Analysis";
 
 var routes = [
   /*{
@@ -88,6 +90,20 @@ var routes = [
     name: "Pacientes",
     icon: "nc-icon nc-single-02",
     component: Patients,
+    layout: "/admin"
+  },
+  {
+    path: "/detail_patient",
+    name: "Detalle de Paciente",
+    icon: "nc-icon nc-single-02",
+    component: DetailPatient,
+    layout: "/admin"
+  },
+  {
+    path: "/analysis",
+    name: "Análisis",
+    icon: "nc-icon nc-single-02",
+    component: Analysis,
     layout: "/admin"
   },
   {
