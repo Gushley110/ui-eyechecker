@@ -37,6 +37,7 @@ import {
 } from "reactstrap";
 
 import SearchInput from '../SearchInput';
+import { logOut } from 'store/actions/sessionHelper'
 
 import routes from "routes.js";
 
@@ -112,6 +113,7 @@ class Header extends React.Component {
   }
   render() {
     const showSearchInput = false;
+    const user_name = sessionStorage.getItem('user_name')
     return (
       // add or remove classes depending if we are on full-screen-maps page or not
       <Navbar
@@ -180,14 +182,14 @@ class Header extends React.Component {
                 toggle={e => this.dropdownToggle(e)}
               >
                 <DropdownToggle caret nav>
-                  Oftalmólogo 1   
+                  {user_name}  
                   <i className="nc-icon nc-single-02" />
                   <p>
-                    <span className="d-lg-none d-md-block">Some Actions</span>
+                    <span className="d-lg-none d-md-block">Acciones</span>
                   </p>
                 </DropdownToggle>
                 <DropdownMenu right>
-                  <DropdownItem tag="a">Cerrar Sesión</DropdownItem>
+                  <DropdownItem tag="a" onClick={logOut}>Cerrar Sesión</DropdownItem>
                 </DropdownMenu>
               </Dropdown>
               

@@ -26,7 +26,7 @@ import NewPatient from "views/Patients/NewPatient";
 import DetailPatient from "views/Patients/DetailPatient";
 import Account from "views/Account/Account"
 
-import Login from "views/Login/Login";
+import LoginPage from "views/Login/LoginPage";
 import Analysis from "views/Analysis/Analysis";
 import DetailAnalysis from "views/Analysis/DetailAnalysis"
 
@@ -146,7 +146,7 @@ var routes = [
   {
     path: "/login",
     name: "Iniciar Sesión",
-    component: Login,
+    component: LoginPage,
   }
   /*{
     pro: true,

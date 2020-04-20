@@ -15,12 +15,18 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import Alert from '@material-ui/lab/Alert';
 
+import { connect } from 'react-redux'
+import { login } from 'store/actions/login'
+
+import { logIn, validateLogin } from 'store/actions/sessionHelper'
+
 import API from 'api'
 
-class Login extends React.Component{
+class LoginPage extends React.Component{
     constructor(props){
         super(props)
         this.state = {
+            user_name: "",
             remember: false,
             alert: "error",
             alert_show: false
@@ -31,8 +37,18 @@ class Login extends React.Component{
         this.props.history.push(where)
     }
 
+    componentDidMount() {
+        validateLogin()
+        const remember = localStorage.getItem('remember') === 'true'
+        const user_name = remember ? localStorage.getItem('user_name') : ''
+        
+        this.setState({ remember, user_name })
+    }
+
     render(){
         const err_msgs = ["Éste campo es obligatorio", "Formato Incorrecto"]
+
+        const { user_name, remember } = this.state
 
         return (
         <div className="background-image">
@@ -49,24 +65,30 @@ class Login extends React.Component{
                 <Row>
                     <Col md="1"/>
                     <Col md="10">
-                        <Formik
+                        <Formik enableReinitialize={true}
                         initialValues={{  
-                            usuario:"",
+                            usuario: user_name,
                             password:"",
                         }}
                         onSubmit={async values => {
                             await new Promise(resolve => setTimeout(resolve, 500));
 
+                            const { remember } = this.state
+
+                            localStorage.setItem('remember', remember)
+                            localStorage.setItem('user_name', remember ? values.usuario : '')
+
                             API.post('login', values)
                             .then(res => {
+                                sessionStorage.setItem('logged',res.data.access)
+                                sessionStorage.setItem('user_name',values.usuario)
                                 this.setState({response: 'Loggeado', alert_show: true, alert:"success"})
+                                console.log(res.data)
                             })
                             .catch(error => {
                               this.setState({response: 'El nombre de usuario o contraseña son incorrectos', alert_show: true, alert:"error"})
                               console.log(error)
                             })
-                            alert(JSON.stringify(values))
-                            console.log("clicked")
                           }}
                         validationSchema={Yup.object().shape({
                             usuario: Yup.string()
@@ -140,9 +162,9 @@ class Login extends React.Component{
                                     <FormControlLabel
                                         control={    
                                         <Checkbox
-                                            checked={values.recordar}
-                                            value={values.recordar}
-                                            onChange={e => setFieldValue('recordar', !values.recordar)}
+                                            checked={remember}
+                                            value={remember}
+                                            onChange={e => this.setState({remember: !remember})}
                                             inputProps={{ 'aria-label': 'Recordar' }}
                                         />
                                         }
@@ -183,4 +205,4 @@ class Login extends React.Component{
     }
 }
 
-export default Login
+export default LoginPage

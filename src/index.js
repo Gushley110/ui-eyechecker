@@ -18,7 +18,7 @@
 */
 import React from "react";
 import ReactDOM from "react-dom";
-import { createBrowserHistory } from "history";
+import history from './history'
 import { Router, Route, Switch, Redirect } from "react-router-dom";
 
 
@@ -32,20 +32,23 @@ import Grow from '@material-ui/core/Grow';
 import Zoom from '@material-ui/core/Zoom';
 
 import AdminLayout from "layouts/Admin.jsx";
-import Login from "views/Login/Login.jsx"
+import LoginPage from "views/Login/LoginPage.jsx"
 import Register from "views/Login/Register";
 import Recover from "views/Login/Recover";
 
-const hist = createBrowserHistory();
+const logged = sessionStorage.getItem('logged')
+
+console.log('logged: ' + logged + ' type: ' + typeof(logged))
+console.log('equal: ' + (logged === 'true') )
 
 ReactDOM.render(
-  <Router history={hist}>
+  <Router history={history}>
     <Switch>
-      <Route path="/login" component={Login} />
+      <Route path="/login" component={LoginPage} />
+      <Route path="/admin" render={props => <AdminLayout {...props} />} />
       <Route path="/register" component={Register} />
       <Route path="/password_recover" component={Recover} />
-      <Route path="/admin" render={props => <AdminLayout {...props} />} />
-      <Redirect to="/login"></Redirect>
+      {logged === 'true' ? <Redirect to="/admin/home" /> : <Redirect to="/login" />}
     </Switch>
   </Router>,
   document.getElementById("root")

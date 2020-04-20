@@ -48,7 +48,7 @@ class Patients extends React.Component {
     }
 
     async componentDidMount() {
-      const {data} = await API.get('patient/list?nombre=all&curp=all');
+      const {data} = await API.get('patient/list',{ params: {nombre: 'all', curp: 'all', id_doctor: 12 } });
 	    this.setState({patients: data});
     }
     
