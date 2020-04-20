@@ -20,13 +20,15 @@
 import Typography from "views/Typography.jsx";
 import Home from "views/Home.jsx";
 import Patients from "views/Patients/Patients.jsx";
-import Appointments from "views/Appointments";
+import Appointments from "views/Appointments/Appointments";
+import CurrentAppointment from "views/Appointments/CurrentAppointment";
 import NewPatient from "views/Patients/NewPatient";
 import DetailPatient from "views/Patients/DetailPatient";
 import Account from "views/Account/Account"
 
 import Login from "views/Login/Login";
-import Analysis from "views/Patients/Analysis";
+import Analysis from "views/Analysis/Analysis";
+import DetailAnalysis from "views/Analysis/DetailAnalysis"
 
 var routes = [
   /*{
@@ -107,10 +109,24 @@ var routes = [
     layout: "/admin"
   },
   {
+    path: "/detail_analysis",
+    name: "Análisis",
+    icon: "nc-icon nc-single-02",
+    component: DetailAnalysis,
+    layout: "/admin"
+  },
+  {
     path: "/appointments",
     name: "Citas",
     icon: "nc-icon nc-calendar-60",
     component: Appointments,
+    layout: "/admin"
+  },
+  {
+    path: "/current_appointment",
+    name: "Cita actual",
+    icon: "nc-icon nc-calendar-60",
+    component: CurrentAppointment,
     layout: "/admin"
   },
   {
