@@ -4,11 +4,11 @@ Created with ReactJS, based on [Paper Dashboard React](https://github.com/creati
 
 ## Quick start
 
-...
+```
 $ git clone https://github.com/Gushley110/ui-eyechecker.git
 $ cd ui-eyechecker
 $ npm install
 $ npm start
-...
+```
 
 
