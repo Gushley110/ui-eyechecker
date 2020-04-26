@@ -48,7 +48,9 @@ class Patients extends React.Component {
     }
 
     async componentDidMount() {
-      const {data} = await API.get('patient/list',{ params: {nombre: 'all', curp: 'all', id_doctor: 12 } });
+      let id_doctor = parseInt(localStorage.getItem('id_doctor'))
+      
+      const {data} = await API.get('patient/list',{ params: {nombre: 'all', curp: 'all', id_doctor: id_doctor } });
 	    this.setState({patients: data});
     }
     
@@ -104,7 +106,8 @@ class Patients extends React.Component {
     handleItemClick = (event,patient) => {
       event.preventDefault()
 
-      console.log('Has clickeado ' + patient.id_paciente)
+      this.props.history.push('/admin/detail_patient', {id_to_load: patient.id_persona})
+      
     }
       
   render() {

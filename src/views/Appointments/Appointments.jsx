@@ -21,6 +21,7 @@ import {
     Button,
     Card,
     CardBody,
+    Form,
     Row,
     Col,
     Table
@@ -28,11 +29,20 @@ import {
 // core components
 import { NavLink } from "react-router-dom";
 import { Nav } from "reactstrap";
+import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import {
+  MuiPickersUtilsProvider,
+  DatePicker
+} from '@material-ui/pickers';
+import { DateTimePicker, KeyboardDateTimePicker } from "@material-ui/pickers";
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import DateFnsUtils from '@date-io/date-fns';
+import esLocale from "date-fns/locale/es";
 import API from 'api'
 
 class Appointments extends React.Component {
@@ -41,15 +51,27 @@ class Appointments extends React.Component {
       this.state = {
         appointments : [],
         dialog_open: false,
+        dialog_form: false,
         dialog_title: "",
         dialog_message: "",
+        appointment_date: new Date(),
+        patients: [],
         id_to_delete: -1
       };
   }
 
+  handleDateChange = (e) => {
+    this.setState({appointment_date: e})
+  }
+
   async componentDidMount() {
-    const {data} = await API.get('appointment?id_doctor=2&fecha=all');
+    let id_doctor = parseInt(localStorage.getItem('id_doctor'))
+
+    const {data} = await API.get('appointment', {params: {id_doctor: id_doctor, fecha: 'all'}});
     this.setState({appointments: data});
+
+    const res = await API.get('patient/list',{ params: {nombre: 'all', curp: 'all', id_doctor: id_doctor } });
+    this.setState({patients: res.data});
   }
   
   setDialogOpen = (val) => {
@@ -86,6 +108,16 @@ class Appointments extends React.Component {
     this.setDialogMsg('¿Estás seguro de cancelar esta cita?', `La cita de ${name} será cancelada y no será posible reagendar.`)
     this.setIdToDelete(id)
   }
+
+  handleSubmit = (event) => {
+    event.preventDefault()
+
+    const form_data = new FormData(event.target)
+
+    alert(JSON.stringify(form_data))
+
+
+  }
   
   handleDelete = event => {
     event.preventDefault();
@@ -107,6 +139,14 @@ class Appointments extends React.Component {
     console.log('Has clickeado ' + patient.id_paciente)
   }
 
+  showNewAppointmentForm = () => {
+    this.setState({dialog_form: true})
+  }
+
+  closeAppointmentForm = () => {
+    this.setState({dialog_form: false})
+  }
+
   render() {
     return (
       <>
@@ -117,9 +157,7 @@ class Appointments extends React.Component {
                 </Col>
                 <Col md="4">
                     <Nav>
-                      <NavLink className="btn btn-secondary" to="/admin/new_patient">
-                        Nueva Cita
-                      </NavLink>
+                      <Button onClick={this.showNewAppointmentForm}>Nueva Cita</Button>
                     </Nav>
                 </Col>
             </Row>
@@ -173,6 +211,44 @@ class Appointments extends React.Component {
               </DialogContent>
               <DialogActions>
                 <Button onClick={this.handleClose} color="warning">Cancelar</Button>
+                <Button onClick={this.handleDelete} color="primary" autoFocus>
+                  Aceptar
+                </Button>
+              </DialogActions>
+            </Dialog> 
+
+            <Dialog
+              open={this.state.dialog_form}
+              onClose={this.closeAppointmentForm}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">Crear Cita</DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  {this.state.dialog_message}
+                </DialogContentText>
+                <Form onSubmit={this.handleSubmit}>
+                  <Autocomplete
+                    id="patient"
+                    options={this.state.patients}
+                    getOptionLabel={(option) => option.nombre}
+                    style={{ width: 500 }}
+                    renderInput={(params) => <TextField {...params} label="Nombre de Paciente"/>}
+                  />
+                  <br/>
+                  <MuiPickersUtilsProvider utils={DateFnsUtils} locale={esLocale}>
+                    <DateTimePicker
+                      label=""
+                      value={this.state.appointment_date}
+                      onChange={this.handleDateChange}
+                      fullWidth
+                    />
+                  </MuiPickersUtilsProvider>
+                </Form>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={this.closeAppointmentForm} color="warning">Cancelar</Button>
                 <Button onClick={this.handleDelete} color="primary" autoFocus>
                   Aceptar
                 </Button>

@@ -14,10 +14,6 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import Alert from '@material-ui/lab/Alert';
-
-import { connect } from 'react-redux'
-import { login } from 'store/actions/login'
-
 import { logIn, validateLogin } from 'store/actions/sessionHelper'
 
 import API from 'api'
@@ -80,10 +76,8 @@ class LoginPage extends React.Component{
 
                             API.post('login', values)
                             .then(res => {
-                                sessionStorage.setItem('logged',res.data.access)
-                                sessionStorage.setItem('user_name',values.usuario)
-                                this.setState({response: 'Loggeado', alert_show: true, alert:"success"})
-                                console.log(res.data)
+                                if(res.data.access)
+                                    logIn(values.usuario,res.data.id_cuenta,res.data.id_doctor,res.data.id_persona)
                             })
                             .catch(error => {
                               this.setState({response: 'El nombre de usuario o contraseña son incorrectos', alert_show: true, alert:"error"})
@@ -192,8 +186,6 @@ class LoginPage extends React.Component{
                           {this.state.alert_show ? 
                           <Alert severity={this.state.alert}>{this.state.response}</Alert> :
                           null}
-
-                          
                         </Col>
                         
                       </Row>

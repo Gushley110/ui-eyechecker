@@ -26,8 +26,6 @@ import {
   Table,
   CardTitle,
 } from "reactstrap";
-import { NavLink } from "react-router-dom";
-import { Nav } from "reactstrap";
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -41,17 +39,24 @@ class DetailPatient extends React.Component {
 		super(props);
         this.state = {
           user: "",
+          reports: [],
           dialog_open: false,
-          id_to_load: -1,
+          id_to_load: this.props.location.state.id_to_load,
           id_to_delete: -1
         };
     }
 
     async componentDidMount() {
       let id = this.state.id_to_load
-      id = 16 //Remove this after redux implementation
+      
       const {data} = await API.get('patient', { params: {id: id} });
-	    this.setState({user: data});
+      this.setState({user: data});
+      
+      const response = await API.get('patient/analysis/list', { params: {id: id}})
+      this.setState({reports: response.data})
+
+      console.log(JSON.stringify(this.state.reports))
+      console.log(typeof(this.state.reports))
     }
     
     setDialogOpen = (val) => {
@@ -108,6 +113,7 @@ class DetailPatient extends React.Component {
     handleItemClick = (event,patient) => {
       event.preventDefault()
 
+      
       console.log('Has clickeado ' + patient.id_paciente)
     }
       
@@ -237,35 +243,26 @@ class DetailPatient extends React.Component {
                 <Col md="12">
                 <Card>
                 <CardBody>
-                  <Row>
-                    <Col md="2">
-                      <span className="text-muted">Nombre de archivo</span>
-                    </Col>
-                    <Col md="4">
-                    <span className="text-muted">Fecha de realización</span>
-                    </Col>
-                    <Col md="6">
-                    <span className="text-muted">Comentarios</span>
-                    </Col>
-                    
-                  </Row>
-                  <hr/>
-
-                  <Row>
-                    <Col md="2">
-                      <a href="#">nombredearchivo.pdf</a>
-                    </Col>
-                    <Col md="4">
-                        Una fecha
-                    </Col>
-                    <Col md="6">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi omnis, possimus sit at in aspernatur sed vero optio corrupti magnam iste mollitia maxime magni! Laborum ducimus obcaecati eius illo hic.
-                    </Col>
-                    
-                  </Row>
-                  <hr/>
-                  
-                  
+                  <Table responsive>
+                    <thead className="text-primary">
+                      <tr>
+                        <td>Nombre de archivo</td>
+                        <td>Fecha de realización</td>
+                        <td>Comentarios</td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {this.state.reports.map((report) => {
+                        return (
+                          <tr key={report.id} >
+                            <td><a href={report.url}>{report.url}</a></td>
+                            <td>Una fecha</td>
+							              <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique quisquam alias facilis sed saepe hic rerum nostrum deserunt dolor et exercitationem nemo quia aut voluptates, perferendis esse molestias eius sequi!</td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </Table>
                 </CardBody>
               </Card>
                 </Col>

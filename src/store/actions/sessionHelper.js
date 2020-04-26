@@ -1,25 +1,22 @@
-import React from 'react'
-import { Redirect } from 'react-router-dom'
 import history from '../../history'
 
-let logged = sessionStorage.getItem('logged')
-
-export const logIn = (user_name, id_user) => {
-    sessionStorage.setItem('logged',true)
-    sessionStorage.setItem('user_name', user_name)
-    sessionStorage.setItem('id_user', id_user)
+export const logIn = (user_name, id_account, id_doctor, id_persona) => {
+    localStorage.setItem('logged',true)
+    localStorage.setItem('user_name', user_name)
+    localStorage.setItem('id_doctor', id_doctor)
+    localStorage.setItem('id_persona',id_persona)
+    localStorage.setItem('id_account',id_account)
     history.push('/admin/home')
 }
 
 export const validateLogin = () => {
-    if(logged === 'true'){
-        history.push('/admin/home')
-    }else{
-        history.push('/login')
-    }
+    let logged = localStorage.getItem('logged')
+
+    return logged === 'true' ? null : history.push('/login')
+
 }
 
 export const logOut = () => {
-    sessionStorage.removeItem('logged')
+    localStorage.clear()
     history.push('/login')
 }

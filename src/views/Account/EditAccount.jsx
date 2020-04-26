@@ -1,84 +1,160 @@
-import React from 'react'
+/*!
 
+=========================================================
+* Paper Dashboard React - v1.1.0
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/paper-dashboard-react
+* Copyright 2019 Creative Tim (https://www.creative-tim.com)
+
+* Licensed under MIT (https://github.com/creativetimofficial/paper-dashboard-react/blob/master/LICENSE.md)
+
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+*/
+import React from "react";
 import {
-    Card,
-    CardBody,
-    Form,
-    Row,
-    Col
+  Button,
+  Card,
+  CardBody,
+  Row,
+  Col,
+  Form,
+  Table,
 } from "reactstrap";
-import Container from '@material-ui/core/Container';
-import { NavLink } from "react-router-dom";
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import API from 'api'
+// Form dependencies
 import { Formik } from 'formik';
 import * as Yup from "yup";
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import Button from '@material-ui/core/Button';
-
 import {
     MuiPickersUtilsProvider,
     DatePicker
   } from '@material-ui/pickers';
 
 import DateFnsUtils from '@date-io/date-fns';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
+import { TimePicker } from "@material-ui/pickers";
+import esLocale from "date-fns/locale/es";
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import { FormControl, FormHelperText } from "@material-ui/core";
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { TimePicker } from "@material-ui/pickers";
-import esLocale from "date-fns/locale/es";
-import API from 'api'
 
-import { Route, Switch } from "react-router-dom";
-import routes from "routes.js";
 
-class Register extends React.Component{
-    constructor(props){
-        super(props)
+class EditAccount extends React.Component {
+    constructor(props) {
+		super(props);
         this.state = {
-            remember: false
-        }
+          user: this.props.location.state.values,
+          dialog_open: false,
+          id_to_load: localStorage.getItem('id_user'),
+          id_to_delete: -1
+        };
     }
 
-    render(){
-        const err_msgs = ["Éste campo es obligatorio", "Formato Incorrecto"]
+    async componentDidMount() {
+      let id = parseInt( this.state.id_to_load )
+      
+    }
+    
+    setDialogOpen = (val) => {
+      this.setState({dialog_open: val})
+    }
 
-        return (
-        <div className="background-image">
-            <Container maxWidth="sm" className="login-container">
-                <div className="form-container">
-                <Row>
-                    <Col md="2"/>
-                    <Col md="8">
-                        <h5 className="login-title">R e g i s t r a r</h5>
-                        <br/> <br/> 
-                    </Col>
-                    <Col md="2"/>
-                </Row>
-                <Row>
-                    <Col md="12">
-                    <Formik
+    setDialogMsg = (title,msg) => {
+      this.setState({dialog_title: title,dialog_message: msg})
+      this.setDialogOpen(true)
+    }		  
+
+    setIdToDelete = (id) => {
+      this.setState({id_to_delete: id})
+    }
+
+    handleClose = () => {
+      this.setDialogOpen(false)
+    }
+
+    handleDeleteClick = event => {
+      event.preventDefault()
+
+      let msg = 'Se perderán los datos de tus pacientes y análisis realizados,' +
+       'la información no podrá ser recuperada y no podrás volver a acceder' +
+       'al sistema sin crear una cuenta nueva'
+
+      /*let id = event.target.id
+      let name
+      this.state.patients.map((item) => {
+        if(item.id_paciente == id){
+          name = item.nombre
+        }
+      })*/
+
+      this.setDialogOpen(true)
+      this.setDialogMsg('¿Estás seguro de querer eliminar tu cuenta?', msg)
+      //this.setIdToDelete(id)
+    }
+    
+    handleDelete = event => {
+      event.preventDefault();
+
+      let id = this.state.id_to_delete
+      
+      let new_patients = this.state.patients.filter((item) => item.id_paciente != id)
+      
+      API.delete('patient', { params: {id: id} })
+      .then(res => {
+        this.setDialogOpen(false)
+        this.setState({patients: new_patients})
+      })
+    }
+
+    handleItemClick = (event,patient) => {
+      event.preventDefault()
+
+      console.log('Has clickeado ' + patient.id_paciente)
+    }
+      
+  render() {
+    const err_msgs = ["Éste campo es obligatorio", "Formato Incorrecto"]
+    const { user } = this.state
+
+    return (
+      <>
+        <div className="content">
+            <Row>
+                <Col md="12">
+                <h5 className="title">Editar mis datos</h5>
+                </Col>
+            </Row>
+            <Row>
+            <Col md="12">
+              <Card>
+                <CardBody>
+
+                <Formik
                     initialValues={{  
-                    nombre:"",
-                    apellido_paterno: "",
-                    apellido_materno: "",
-                    fecha_nacimiento: "1990-01-01T12:00:00",
-                    genero: "",
-                    cedula: "",
-                    email: "",
-                    telefono_celular: "",
+                    nombre: user.nombre,
+                    apellido_paterno: user.apellido_materno,
+                    apellido_materno: user.apellido_paterno,
+                    fecha_nacimiento: user.fecha_nacimiento,
+                    genero: user.genero,
+                    cedula: user.cedula,
+                    email: user.email,
+                    telefono_celular: user.telefono_celular,
                     horario_inicio: "1990-01-01T07:00:00",
                     horario_fin: "1990-01-01T17:00:00",
                     horario: "",
-                    organizacion: "",
+                    organizacion: user.organizacion,
                     usuario: "",
                     password: ""
                   }}
@@ -113,10 +189,10 @@ class Register extends React.Component{
                         .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñ ]+$/,err_msgs[1])
                         .required(err_msgs[0]),
                       apellido_paterno: Yup.string()
-                        .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñ ]+$/,err_msgs[1])
+                        .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñ]+$/,err_msgs[1])
                         .required(err_msgs[0]),
                       apellido_materno: Yup.string()
-                        .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñ ]+$/,err_msgs[1])
+                        .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñ]+$/,err_msgs[1])
                         .required(err_msgs[0]),
                       telefono_celular: Yup.string()
                         .matches(/^([0-9]{2})?[0-9]{8}$/,err_msgs[1])
@@ -270,22 +346,22 @@ class Register extends React.Component{
                         </Col>
 
                         <Col md="6">
-                          <TextField type="text" 
-                          label="Correo Electrónico" 
-                          id="email"
-                          value={values.email}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          error={errors.email && touched.email
-                            ? true 
-                            : false}
-                          helperText={
-                            errors.email && touched.email ?
-                            errors.email :
-                            ''
-                          }
-                          fullWidth
-                          />
+                        <TextField type="text" 
+                        label="Correo Electrónico" 
+                        id="email"
+                        value={values.email}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={errors.email && touched.email
+                          ? true 
+                          : false}
+                        helperText={
+                          errors.email && touched.email ?
+                          errors.email :
+                          ''
+                        }
+                        fullWidth
+                        />
                         </Col>
                       </Row>
 
@@ -414,15 +490,36 @@ class Register extends React.Component{
                     );
                   }}
                 </Formik>
-                    </Col>
-                    
-                </Row>
-                </div>
-                
-            </Container>
+                  
+                </CardBody>
+              </Card>
+            </Col>
+            </Row>
+            <Dialog
+                  open={this.state.dialog_open}
+                  onClose={this.handleClose}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">{this.state.dialog_title}</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                      {this.state.dialog_message}
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={this.handleClose} color="warning">Cancelar</Button>
+                    <Button onClick={this.handleDelete} color="primary" autoFocus>
+                      Aceptar
+                    </Button>
+                  </DialogActions>
+                </Dialog> 
+            
+          
         </div>
-        )
-    }
+      </>
+    );
+  }
 }
 
-export default Register
+export default EditAccount;

@@ -93,10 +93,10 @@ input#cedula{
     margin: 15px;
 }
 
-table.clickable tr{
+table.clickable tbody tr{
     cursor: pointer;
 }
 
-table.clickable tr:hover{
+table.clickable tbody tr:hover{
     background-color: darken($white,3%);
 }

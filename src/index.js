@@ -28,18 +28,11 @@ import "assets/demo/demo.css";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 import 'assets/scss/icheck-material/icheck-material.scss';
 import 'assets/scss/custom_styles.scss'
-import Grow from '@material-ui/core/Grow';
-import Zoom from '@material-ui/core/Zoom';
 
 import AdminLayout from "layouts/Admin.jsx";
 import LoginPage from "views/Login/LoginPage.jsx"
 import Register from "views/Login/Register";
 import Recover from "views/Login/Recover";
-
-const logged = sessionStorage.getItem('logged')
-
-console.log('logged: ' + logged + ' type: ' + typeof(logged))
-console.log('equal: ' + (logged === 'true') )
 
 ReactDOM.render(
   <Router history={history}>
@@ -48,7 +41,6 @@ ReactDOM.render(
       <Route path="/admin" render={props => <AdminLayout {...props} />} />
       <Route path="/register" component={Register} />
       <Route path="/password_recover" component={Recover} />
-      {logged === 'true' ? <Redirect to="/admin/home" /> : <Redirect to="/login" />}
     </Switch>
   </Router>,
   document.getElementById("root")

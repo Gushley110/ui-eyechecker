@@ -41,14 +41,14 @@ class Account extends React.Component {
         this.state = {
           user: "",
           dialog_open: false,
-          id_to_load: -1,
+          id_to_load: localStorage.getItem('id_persona'),
           id_to_delete: -1
         };
     }
 
     async componentDidMount() {
-      let id = this.state.id_to_load
-      id = 20
+      let id = parseInt( this.state.id_to_load )
+            
       const {data} = await API.get('doctor', { params: {id: id} });
 	    this.setState({user: data});
     }
@@ -70,44 +70,10 @@ class Account extends React.Component {
       this.setDialogOpen(false)
     }
 
-    handleDeleteClick = event => {
-      event.preventDefault()
-
-      let msg = 'Se perderán los datos de tus pacientes y análisis realizados,' +
-       'la información no podrá ser recuperada y no podrás volver a acceder' +
-       'al sistema sin crear una cuenta nueva'
-
-      /*let id = event.target.id
-      let name
-      this.state.patients.map((item) => {
-        if(item.id_paciente == id){
-          name = item.nombre
-        }
-      })*/
-
-      this.setDialogOpen(true)
-      this.setDialogMsg('¿Estás seguro de querer eliminar tu cuenta?', msg)
-      //this.setIdToDelete(id)
-    }
-    
-    handleDelete = event => {
-      event.preventDefault();
-
-      let id = this.state.id_to_delete
+    handleEditClick = () => {
       
-      let new_patients = this.state.patients.filter((item) => item.id_paciente != id)
-      
-      API.delete('patient', { params: {id: id} })
-      .then(res => {
-        this.setDialogOpen(false)
-        this.setState({patients: new_patients})
-      })
-    }
+      this.props.history.push('/admin/edit_account', {values: this.state.user})
 
-    handleItemClick = (event,patient) => {
-      event.preventDefault()
-
-      console.log('Has clickeado ' + patient.id_paciente)
     }
       
   render() {
@@ -192,7 +158,7 @@ class Account extends React.Component {
                   <Row>
                     <Col md="12" >
                       <div className="pull-right">
-                        <Button color="primary">EDITAR MIS DATOS</Button>
+                        <Button onClick={this.handleEditClick} color="primary">EDITAR MIS DATOS</Button>
                         <Button onClick={this.handleDeleteClick} color="warning">ELIMINAR MI CUENTA</Button>
                       </div>
                     </Col>

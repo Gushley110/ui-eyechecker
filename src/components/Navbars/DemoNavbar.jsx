@@ -113,7 +113,7 @@ class Header extends React.Component {
   }
   render() {
     const showSearchInput = false;
-    const user_name = sessionStorage.getItem('user_name')
+    const user_name = localStorage.getItem('user_name')
     return (
       // add or remove classes depending if we are on full-screen-maps page or not
       <Navbar

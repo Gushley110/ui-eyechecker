@@ -33,6 +33,7 @@ import {
   DatePicker
 } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import esLocale from "date-fns/locale/es";
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -156,11 +157,14 @@ class NewPatient extends React.Component {
                     enfermedades_recientes: "",
                     medicamentos: "",
                     enfermedades_cronicas: "",
-                    enfermedades_hereditarias: ""
+                    enfermedades_hereditarias: "",
+                    id_doctor: parseInt(localStorage.getItem('id_doctor'))
                   }}
                   
                     onSubmit={async values => {
                       await new Promise(resolve => setTimeout(resolve, 500));
+                      
+                      alert(JSON.stringify(values))
                       API.post('patient', values)
                       .then(res => {
                         this.setDialogMsg('Registro Exitoso','El paciente ' + values.nombre + ' ha sido registrado de manera correcta.')
@@ -176,13 +180,13 @@ class NewPatient extends React.Component {
                         .email('Formato de correo incorrecto')
                         .required(err_msgs[0]),
                       nombre: Yup.string()
-                        .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñ]+$/,err_msgs[1])
+                        .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñ ]+$/,err_msgs[1])
                         .required(err_msgs[0]),
                       apellido_paterno: Yup.string()
-                        .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñ]+$/,err_msgs[1])
+                        .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñ ]+$/,err_msgs[1])
                         .required(err_msgs[0]),
                       apellido_materno: Yup.string()
-                        .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñ]+$/,err_msgs[1])
+                        .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñ ]+$/,err_msgs[1])
                         .required(err_msgs[0]),
                       curp: Yup.string()
                         .matches(/^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$/,err_msgs[1])
@@ -301,7 +305,7 @@ class NewPatient extends React.Component {
                         </Col>
 
                         <Col md="6">
-                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={esLocale}>
                         <DatePicker
                           margin="normal"
                           id="date-picker-dialog"
