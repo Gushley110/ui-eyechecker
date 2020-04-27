@@ -28,40 +28,55 @@ import {
     Row,
     Col
 } from "reactstrap";
+import { format } from 'date-fns'
+import API from 'api'
 
 class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
           date: '',
+          appointments: []
         };
       }
-      componentDidMount() {
-        let that = this;
+
+      async componentDidMount() {
+        let dt = this.setReadableDate()
+        let id_doctor = parseInt(localStorage.getItem('id_doctor'))
+
+        const {data} = await API.get('appointment', {params: {id_doctor: id_doctor, fecha: dt}});
+        this.setState({appointments: data})
+      }
+
+      setReadableDate = () => {
+        
         let date = new Date().getDate(); //Current Date
         let month = new Date().getMonth() + 1; //Current Month
         let year = new Date().getFullYear(); //Current Year
 
         let months = ['Enero',
-        'Febrero',
-        'Marzo',
-        'Abril',
-        'Mayo',
-        'Junio',
-        'Julio',
-        'Agosto',
-        'Septiembre',
-        'Octubre',
-        'Noviembre',
-        'Diciembre'
-        ];
+                      'Febrero',
+                      'Marzo',
+                      'Abril',
+                      'Mayo',
+                      'Junio',
+                      'Julio',
+                      'Agosto',
+                      'Septiembre',
+                      'Octubre',
+                      'Noviembre',
+                      'Diciembre'
+                      ];
 
-        that.setState({
+        this.setState({
           //Setting the value of the date time
           date:
             ', ' + date + ' de ' + months[month - 1] + ' de ' + year ,
         });
+
+        return format(new Date(), 'yyyy-MM-dd')
       }
+
   render() {
     return (
       <>

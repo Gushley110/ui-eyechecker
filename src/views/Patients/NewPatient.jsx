@@ -164,7 +164,7 @@ class NewPatient extends React.Component {
                     onSubmit={async values => {
                       await new Promise(resolve => setTimeout(resolve, 500));
                       
-                      alert(JSON.stringify(values))
+                      //alert(JSON.stringify(values))
                       API.post('patient', values)
                       .then(res => {
                         this.setDialogMsg('Registro Exitoso','El paciente ' + values.nombre + ' ha sido registrado de manera correcta.')

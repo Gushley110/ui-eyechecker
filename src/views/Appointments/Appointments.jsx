@@ -42,6 +42,7 @@ import {
 import { DateTimePicker, KeyboardDateTimePicker } from "@material-ui/pickers";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import DateFnsUtils from '@date-io/date-fns';
+import { format } from 'date-fns'
 import esLocale from "date-fns/locale/es";
 import API from 'api'
 
@@ -56,6 +57,7 @@ class Appointments extends React.Component {
         dialog_message: "",
         appointment_date: new Date(),
         patients: [],
+        patient: "",
         id_to_delete: -1
       };
   }
@@ -112,11 +114,32 @@ class Appointments extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault()
 
-    const form_data = new FormData(event.target)
+    const form_data = new FormData()
 
-    alert(JSON.stringify(form_data))
+    form_data.append('fecha_agendada', format(this.state.appointment_date, 'yyyy-MM-dd HH:mm'))
+    form_data.append('id_paciente', this.state.patient)
+    form_data.append('id_doctor', localStorage.getItem('id_doctor'))
+    
+    console.log(form_data.get('fecha_agendada'))
+    console.log(form_data.get('id_paciente'))
+    console.log(form_data.get('id_doctor'))
+        
+    API.post('appointment', form_data )
+      .then(res => {
+        console.log(res.data)
+        //this.setDialogMsg('Registro Exitoso','El paciente ' + values.nombre + ' ha sido registrado de manera correcta.')
+        //this.setDialogOpen(false)
+      })
+      .catch(error => {
+        //this.setState({loading: false})
+        //this.setDialogMsg('Error','Hubo un error al realizar el análisis.')
+        console.log(error)
+      })
 
+  }
 
+  handlePatientChange = (e) => {
+    console.log(e.target.value)
   }
   
   handleDelete = event => {
@@ -181,7 +204,7 @@ class Appointments extends React.Component {
                           <tr key={appointment.id_cita} onClick={(e) => this.handleItemClick(e,appointment)}>
                             <td>{appointment.nombre}</td>
 							              <td>{appointment.fecha_agendada}</td>
-                            <td>Una fecha </td>
+                            <td>{appointment.fecha_creacion} </td>
                             <td> Un estado </td>
                             <td>
                               <Button id={appointment.id_cita} onClick={this.handleEdit}>Editar</Button>
@@ -223,15 +246,23 @@ class Appointments extends React.Component {
               aria-labelledby="alert-dialog-title"
               aria-describedby="alert-dialog-description"
             >
+              <Form onSubmit={this.handleSubmit}>
               <DialogTitle id="alert-dialog-title">Crear Cita</DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
                   {this.state.dialog_message}
                 </DialogContentText>
-                <Form onSubmit={this.handleSubmit}>
+                
                   <Autocomplete
                     id="patient"
+                    name="patient"
                     options={this.state.patients}
+                    
+                    onChange={(event, option) => {
+                      option != null ?
+                      this.setState({patient: option.id_paciente}) :
+                      this.setState({patient: ""})
+                    }}
                     getOptionLabel={(option) => option.nombre}
                     style={{ width: 500 }}
                     renderInput={(params) => <TextField {...params} label="Nombre de Paciente"/>}
@@ -240,19 +271,25 @@ class Appointments extends React.Component {
                   <MuiPickersUtilsProvider utils={DateFnsUtils} locale={esLocale}>
                     <DateTimePicker
                       label=""
+                      id="appointment_date"
+                      name="appointment_date"
                       value={this.state.appointment_date}
                       onChange={this.handleDateChange}
+                      disablePast
+                      format="yyyy/MM/dd HH:mm"
                       fullWidth
                     />
                   </MuiPickersUtilsProvider>
-                </Form>
+                
               </DialogContent>
               <DialogActions>
                 <Button onClick={this.closeAppointmentForm} color="warning">Cancelar</Button>
-                <Button onClick={this.handleDelete} color="primary" autoFocus>
+                <Button color="primary" autoFocus>
                   Aceptar
                 </Button>
+                
               </DialogActions>
+              </Form>
             </Dialog> 
             
           

@@ -14,7 +14,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import Alert from '@material-ui/lab/Alert';
-import { logIn, validateLogin } from 'store/actions/sessionHelper'
+import { logIn } from 'store/actions/sessionHelper'
 
 import API from 'api'
 
@@ -34,11 +34,17 @@ class LoginPage extends React.Component{
     }
 
     componentDidMount() {
-        validateLogin()
+        this.validateLogin()
         const remember = localStorage.getItem('remember') === 'true'
         const user_name = remember ? localStorage.getItem('user_name') : ''
         
         this.setState({ remember, user_name })
+    }
+
+    validateLogin = () => {
+        const logged = localStorage.getItem('logged')
+
+        return logged === 'true' ? this.props.history.push('/admin/home') : null
     }
 
     render(){
