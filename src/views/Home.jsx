@@ -87,90 +87,46 @@ class Home extends React.Component {
                 </Col>
             </Row>
           <Row>
-            <Col lg="4" md="6" sm="6">
+
+            {this.state.appointments.map((appointment) => {
+              return(
+                <React.Fragment key={appointment.id_cita} >
+                <Col lg="4" md="6" sm="6">
             
-              <Card className="card-stats">
-                <CardBody>
-                  <Row>
-                    <Col md="12">
-                    <div className="numbers">
-                        <CardTitle tag="p">10:30 - 12:00</CardTitle>
-                        <p className="card-category">Roberto Reyes Fragoso</p>
-                        <p />
-                      </div>
-                    </Col>
-                  </Row>
-                </CardBody>
-                <CardFooter>
-                  <hr />
-                 <Form>
-                <Button
-                    className="pull-right"
-                    color="primary"
-                    type="submit"
-                >
-                    Atender Cita
-                </Button>
-                </Form> 
-                </CardFooter>
-              </Card>
-            </Col>
-            <Col lg="4" md="6" sm="6">
-            
-              <Card className="card-stats">
-                <CardBody>
-                  <Row>
-                    <Col md="12">
-                    <div className="numbers">
-                        <CardTitle tag="p">10:30 - 12:00</CardTitle>
-                        <p className="card-category">Roberto Reyes Fragoso</p>
-                        <p />
-                      </div>
-                    </Col>
-                  </Row>
-                </CardBody>
-                <CardFooter>
-                  <hr />
-                 <Form>
-                <Button
-                    className="pull-right"
-                    color="primary"
-                    type="submit"
-                >
-                    Atender Cita
-                </Button>
-                </Form> 
-                </CardFooter>
-              </Card>
-            </Col>
-            <Col lg="4" md="6" sm="6">
-            
-              <Card className="card-stats">
-                <CardBody>
-                  <Row>
-                    <Col md="12">
-                    <div className="numbers">
-                        <CardTitle tag="p">10:30 - 12:00</CardTitle>
-                        <p className="card-category">Roberto Reyes Fragoso</p>
-                        <p />
-                      </div>
-                    </Col>
-                  </Row>
-                </CardBody>
-                <CardFooter>
-                  <hr />
-                 <Form>
-                <Button
-                    className="pull-right"
-                    color="primary"
-                    type="submit"
-                >
-                    Atender Cita
-                </Button>
-                </Form> 
-                </CardFooter>
-              </Card>
-            </Col>
+                  <Card className="card-stats">
+                      <CardBody>
+                        <Row>
+                          <Col md="12">
+                          <div className="numbers">
+                              <CardTitle tag="p">10:30 - 12:00 [Horario]</CardTitle>
+                              <p className="card-category">{appointment.nombre}</p>
+                              <p />
+                            </div>
+                          </Col>
+                        </Row>
+                      </CardBody>
+                      <CardFooter>
+                        <hr />
+                      <Form>
+                      <Button
+                          className="pull-right"
+                          color="primary"
+                          type="submit"
+                          id={appointment.id_cita}
+                          onClick={this.handleAppointmentClick}
+                      >
+                          Atender Cita
+                      </Button>
+                      </Form> 
+                      </CardFooter>
+                    </Card>
+                  </Col>
+                  </React.Fragment>
+              )
+            })
+
+            }
+
           </Row>
           
         </div>
