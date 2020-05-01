@@ -196,7 +196,6 @@ class Appointments extends React.Component {
                         <th>Fecha de Creación</th>
                         <th>Estado</th>
                         <th>Acción</th>
-                        <th>test</th>
                       </tr>
                     </thead>
                     <tbody>

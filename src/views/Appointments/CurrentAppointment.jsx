@@ -42,16 +42,23 @@ class CurrentAppointment extends React.Component {
         this.state = {
           user: "",
           dialog_open: false,
-          id_to_load: -1,
+          id_patient: this.props.location.state.values.id_paciente,
+          reports: [],
+          last_report: "",
           id_to_delete: -1
         };
     }
 
     async componentDidMount() {
-      let id = this.state.id_to_load
-      id = 16 //Remove this after redux implementation
+      let id_patient = this.state.id_patient
+      let id = 28
       const {data} = await API.get('patient', { params: {id: id} });
-	    this.setState({user: data});
+      const res = await API.get('patient/analysis/list',{ params: {id: id_patient} })
+
+      this.setState({user: data, reports: res.data});
+      this.setState({last_report: this.state.reports[this.state.reports.length - 1]})
+
+      console.log(this.state.last_report.url)
     }
     
     setDialogOpen = (val) => {
@@ -112,12 +119,20 @@ class CurrentAppointment extends React.Component {
     }
       
   render() {
+
     return (
       <>
         <div className="content">
             <Row>
-                <Col md="12">
+                <Col md="8">
                     <h5 className="title">Cita Actual</h5>
+                </Col>
+                <Col md="4">
+                    <Nav>
+                      <NavLink className="btn btn-primary" to="/admin/new_patient">
+                        Nuevo Análisis
+                      </NavLink>
+                    </Nav>
                 </Col>
             </Row>
             <Row>
@@ -245,10 +260,11 @@ class CurrentAppointment extends React.Component {
                   </Row>
 
                   <hr/>
+                  
 
                   <Row>
                     <Col md="4">
-                      <a href="#">nombredearchivo.pdf</a>
+                      <a href="#">{this.state.last_report.url}</a>
                     </Col>
                     <Col md="3">
                         Una fecha
@@ -287,14 +303,23 @@ class CurrentAppointment extends React.Component {
 
                   <hr/>
 
-                  <Row>
-                    <Col md="7">
-                      <a href="#">nombredearchivo.pdf</a>
-                    </Col>
-                    <Col md="5">
-                        Una fecha
-                    </Col>
-                  </Row>
+                  {this.state.reports.map((report) => {
+                    return(
+                      <React.Fragment key={report.id}>
+                      <Row>
+                        <Col md="7">
+                          <a href={report.url} target="_blank">{report.url}</a>
+                          <span onClick={() => window.open(report.url,"_blank")}>sdfsdf</span>
+                        </Col>
+                        <Col md="5">
+                            Una fecha
+                        </Col>
+                      </Row>
+                      </React.Fragment>
+                    )
+                  })}
+
+                  
                   <hr/>
                   
                   

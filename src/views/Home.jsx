@@ -36,46 +36,57 @@ class Home extends React.Component {
         super(props);
         this.state = {
           date: '',
-          appointments: []
+          appointments: [],
         };
       }
 
-      async componentDidMount() {
-        let dt = this.setReadableDate()
-        let id_doctor = parseInt(localStorage.getItem('id_doctor'))
+    async componentDidMount() {
+      let dt = this.setReadableDate()
+      let id_doctor = parseInt(localStorage.getItem('id_doctor'))
 
-        const {data} = await API.get('appointment', {params: {id_doctor: id_doctor, fecha: dt}});
-        this.setState({appointments: data})
+      const {data} = await API.get('appointment', {params: {id_doctor: id_doctor, fecha: dt}});
+      this.setState({appointments: data})
+    }
+
+    setReadableDate = () => {
+      
+      let date = new Date().getDate(); //Current Date
+      let month = new Date().getMonth() + 1; //Current Month
+      let year = new Date().getFullYear(); //Current Year
+
+      let months = ['Enero',
+                    'Febrero',
+                    'Marzo',
+                    'Abril',
+                    'Mayo',
+                    'Junio',
+                    'Julio',
+                    'Agosto',
+                    'Septiembre',
+                    'Octubre',
+                    'Noviembre',
+                    'Diciembre'
+                    ];
+
+      this.setState({
+        //Setting the value of the date time
+        date:
+          ', ' + date + ' de ' + months[month - 1] + ' de ' + year ,
+      });
+
+      return format(new Date(), 'yyyy-MM-dd')
+    }
+
+    handleAppointmentClick(id_cita, id_paciente){
+      
+      let o = {
+        'id_cita': id_cita,
+        'id_paciente': id_paciente
       }
 
-      setReadableDate = () => {
-        
-        let date = new Date().getDate(); //Current Date
-        let month = new Date().getMonth() + 1; //Current Month
-        let year = new Date().getFullYear(); //Current Year
-
-        let months = ['Enero',
-                      'Febrero',
-                      'Marzo',
-                      'Abril',
-                      'Mayo',
-                      'Junio',
-                      'Julio',
-                      'Agosto',
-                      'Septiembre',
-                      'Octubre',
-                      'Noviembre',
-                      'Diciembre'
-                      ];
-
-        this.setState({
-          //Setting the value of the date time
-          date:
-            ', ' + date + ' de ' + months[month - 1] + ' de ' + year ,
-        });
-
-        return format(new Date(), 'yyyy-MM-dd')
-      }
+      this.props.history.push('/admin/current_appointment', {values: o})
+      
+    }
 
   render() {
     return (
@@ -107,17 +118,15 @@ class Home extends React.Component {
                       </CardBody>
                       <CardFooter>
                         <hr />
-                      <Form>
-                      <Button
-                          className="pull-right"
-                          color="primary"
-                          type="submit"
-                          id={appointment.id_cita}
-                          onClick={this.handleAppointmentClick}
-                      >
-                          Atender Cita
-                      </Button>
-                      </Form> 
+                      <Form onSubmit={(e) => {e.preventDefault(); this.handleAppointmentClick(appointment.id_cita,appointment.id_paciente)}}>
+                        <Button
+                            className="pull-right"
+                            color="primary"
+                            type="submit"
+                        >
+                            Atender Cita
+                        </Button>
+                      </Form>
                       </CardFooter>
                     </Card>
                   </Col>
