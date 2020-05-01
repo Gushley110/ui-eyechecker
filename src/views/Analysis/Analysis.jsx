@@ -23,11 +23,8 @@ import {
   CardBody,
   Row,
   Col,
-  Form,
-  Table,
+  Form
 } from "reactstrap";
-import { NavLink } from "react-router-dom";
-import { Nav } from "reactstrap";
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -85,46 +82,6 @@ class Analysis extends React.Component {
       this.setDialogOpen(false)
     }
 
-    handleDeleteClick = event => {
-      event.preventDefault()
-
-      let msg = 'Se perderán los datos de tus pacientes y análisis realizados,' +
-       'la información no podrá ser recuperada y no podrás volver a acceder' +
-       'al sistema sin crear una cuenta nueva'
-
-      /*let id = event.target.id
-      let name
-      this.state.patients.map((item) => {
-        if(item.id_paciente == id){
-          name = item.nombre
-        }
-      })*/
-
-      this.setDialogOpen(true)
-      this.setDialogMsg('¿Estás seguro de querer eliminar tu cuenta?', msg)
-      //this.setIdToDelete(id)
-    }
-    
-    handleDelete = event => {
-      event.preventDefault();
-
-      let id = this.state.id_to_delete
-      
-      let new_patients = this.state.patients.filter((item) => item.id_paciente != id)
-      
-      API.delete('patient', { params: {id: id} })
-      .then(res => {
-        this.setDialogOpen(false)
-        this.setState({patients: new_patients})
-      })
-    }
-
-    handleItemClick = (event,patient) => {
-      event.preventDefault()
-
-      console.log('Has clickeado ' + patient.id_paciente)
-    }
-
     handleSubmit = (e) => {
       e.preventDefault()
 
@@ -151,7 +108,6 @@ class Analysis extends React.Component {
                         this.setDialogMsg('Error','Hubo un error al realizar el análisis.')
                         //console.log(error)
                       })
-      console.log('Form submitted')
     }
       
   render() {

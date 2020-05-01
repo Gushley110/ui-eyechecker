@@ -27,7 +27,6 @@ import {
     Table
 } from "reactstrap";
 // core components
-import { NavLink } from "react-router-dom";
 import { Nav } from "reactstrap";
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -35,11 +34,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import {
-  MuiPickersUtilsProvider,
-  DatePicker
-} from '@material-ui/pickers';
-import { DateTimePicker, KeyboardDateTimePicker } from "@material-ui/pickers";
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { DateTimePicker } from "@material-ui/pickers";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import DateFnsUtils from '@date-io/date-fns';
 import { format } from 'date-fns'

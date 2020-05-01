@@ -22,12 +22,8 @@ import {
   Card,
   CardBody,
   Row,
-  Col,
-  Table,
-  CardTitle,
+  Col
 } from "reactstrap";
-import { NavLink } from "react-router-dom";
-import { Nav } from "reactstrap";
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -99,29 +95,8 @@ class DetailAnalysis extends React.Component {
       this.setDialogMsg('¿Estás seguro de querer eliminar tu cuenta?', msg)
       //this.setIdToDelete(id)
     }
-    
-    handleDelete = event => {
-      event.preventDefault();
-
-      let id = this.state.id_to_delete
-      
-      let new_patients = this.state.patients.filter((item) => item.id_paciente != id)
-      
-      API.delete('patient', { params: {id: id} })
-      .then(res => {
-        this.setDialogOpen(false)
-        this.setState({patients: new_patients})
-      })
-    }
-
-    handleItemClick = (event,patient) => {
-      event.preventDefault()
-
-      console.log('Has clickeado ' + patient.id_paciente)
-    }
       
   render() {
-    const { pageNumber, numPages } = this.state;
 
     return (
       <>
@@ -157,7 +132,7 @@ class DetailAnalysis extends React.Component {
                             <span className="text-muted">REPORTE</span>
                         </Col>
                         <Col md="8">
-                            <a href="#">asdfjkjbdsf.pdf</a>
+                            <a href="/">asdfjkjbdsf.pdf</a>
                         </Col>
                     </Row>
                   <hr/>

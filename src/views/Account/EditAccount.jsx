@@ -23,8 +23,7 @@ import {
   CardBody,
   Row,
   Col,
-  Form,
-  Table,
+  Form
 } from "reactstrap";
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -37,7 +36,6 @@ import { Formik } from 'formik';
 import * as Yup from "yup";
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import {
     MuiPickersUtilsProvider,
     DatePicker
@@ -63,7 +61,7 @@ class EditAccount extends React.Component {
     }
 
     async componentDidMount() {
-      let id = parseInt( this.state.id_to_load )
+      //let id = parseInt( this.state.id_to_load )
       
     }
     
@@ -82,46 +80,6 @@ class EditAccount extends React.Component {
 
     handleClose = () => {
       this.setDialogOpen(false)
-    }
-
-    handleDeleteClick = event => {
-      event.preventDefault()
-
-      let msg = 'Se perderán los datos de tus pacientes y análisis realizados,' +
-       'la información no podrá ser recuperada y no podrás volver a acceder' +
-       'al sistema sin crear una cuenta nueva'
-
-      /*let id = event.target.id
-      let name
-      this.state.patients.map((item) => {
-        if(item.id_paciente == id){
-          name = item.nombre
-        }
-      })*/
-
-      this.setDialogOpen(true)
-      this.setDialogMsg('¿Estás seguro de querer eliminar tu cuenta?', msg)
-      //this.setIdToDelete(id)
-    }
-    
-    handleDelete = event => {
-      event.preventDefault();
-
-      let id = this.state.id_to_delete
-      
-      let new_patients = this.state.patients.filter((item) => item.id_paciente != id)
-      
-      API.delete('patient', { params: {id: id} })
-      .then(res => {
-        this.setDialogOpen(false)
-        this.setState({patients: new_patients})
-      })
-    }
-
-    handleItemClick = (event,patient) => {
-      event.preventDefault()
-
-      console.log('Has clickeado ' + patient.id_paciente)
     }
       
   render() {
@@ -172,7 +130,7 @@ class EditAccount extends React.Component {
                       API.post('doctor', values)
                       .then(res => {
                         console.log(res)
-                        this.props.history.push('\login')
+                        this.props.history.push('login')
                         //this.setDialogMsg('Registro Exitoso','El paciente ' + values.nombre + ' ha sido registrado de manera correcta.')
                       })
                       .catch(error => {
@@ -219,7 +177,6 @@ class EditAccount extends React.Component {
                       handleChange,
                       handleBlur,
                       handleSubmit,
-                      handleReset,
                       setFieldValue,
                       setFieldTouched
                     } = props;
@@ -462,13 +419,7 @@ class EditAccount extends React.Component {
                           autoOk 
                           label="Inicio Fin" 
                           value={values.horario_fin} 
-                          onChange={value => {
-                            
-                            let time_init = new Date(values.horario_inicio).toLocaleTimeString('es-MX')
-                            let time_end = new Date(value).toLocaleTimeString('es-MX')
-                            let time_range = time_init + '-' + time_end
-                            console.log(time_init + '-' + time_end)
-                            setFieldValue('horario_fin',value)
+                          onChange={value => {setFieldValue('horario_fin',value)
                           }} />
                           </Col>
                         </MuiPickersUtilsProvider>

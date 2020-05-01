@@ -22,11 +22,8 @@ import {
   Card,
   CardBody,
   Row,
-  Col,
-  Table,
+  Col
 } from "reactstrap";
-import { NavLink } from "react-router-dom";
-import { Nav } from "reactstrap";
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';

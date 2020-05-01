@@ -23,8 +23,7 @@ import {
   CardBody,
   Row,
   Col,
-  Table,
-  CardTitle,
+  Table
 } from "reactstrap";
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -55,8 +54,6 @@ class DetailPatient extends React.Component {
       const response = await API.get('patient/analysis/list', { params: {id: id}})
       this.setState({reports: response.data})
 
-      console.log(JSON.stringify(this.state.reports))
-      console.log(typeof(this.state.reports))
     }
     
     setDialogOpen = (val) => {
@@ -74,47 +71,6 @@ class DetailPatient extends React.Component {
 
     handleClose = () => {
       this.setDialogOpen(false)
-    }
-
-    handleDeleteClick = event => {
-      event.preventDefault()
-
-      let msg = 'Se perderán los datos de tus pacientes y análisis realizados,' +
-       'la información no podrá ser recuperada y no podrás volver a acceder' +
-       'al sistema sin crear una cuenta nueva'
-
-      /*let id = event.target.id
-      let name
-      this.state.patients.map((item) => {
-        if(item.id_paciente == id){
-          name = item.nombre
-        }
-      })*/
-
-      this.setDialogOpen(true)
-      this.setDialogMsg('¿Estás seguro de querer eliminar tu cuenta?', msg)
-      //this.setIdToDelete(id)
-    }
-    
-    handleDelete = event => {
-      event.preventDefault();
-
-      let id = this.state.id_to_delete
-      
-      let new_patients = this.state.patients.filter((item) => item.id_paciente != id)
-      
-      API.delete('patient', { params: {id: id} })
-      .then(res => {
-        this.setDialogOpen(false)
-        this.setState({patients: new_patients})
-      })
-    }
-
-    handleItemClick = (event,patient) => {
-      event.preventDefault()
-
-      
-      console.log('Has clickeado ' + patient.id_paciente)
     }
       
   render() {

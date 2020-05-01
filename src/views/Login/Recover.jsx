@@ -88,10 +88,7 @@ class Recover extends React.Component{
                       errors,
                       handleChange,
                       handleBlur,
-                      handleSubmit,
-                      handleReset,
-                      setFieldValue,
-                      setFieldTouched
+                      handleSubmit
                     } = props;
                     return (
                     <Form onSubmit={handleSubmit}>

@@ -1,19 +1,15 @@
 import React from 'react'
 
 import {
-    Card,
-    CardBody,
     Form,
     Row,
     Col
 } from "reactstrap";
 import Container from '@material-ui/core/Container';
-import { NavLink } from "react-router-dom";
 import { Formik } from 'formik';
 import * as Yup from "yup";
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 
 import {
@@ -22,23 +18,12 @@ import {
   } from '@material-ui/pickers';
 
 import DateFnsUtils from '@date-io/date-fns';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import { FormControl, FormHelperText } from "@material-ui/core";
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import { TimePicker } from "@material-ui/pickers";
 import esLocale from "date-fns/locale/es";
 import API from 'api'
-
-import { Route, Switch } from "react-router-dom";
-import routes from "routes.js";
 
 class Register extends React.Component{
     constructor(props){
@@ -96,7 +81,7 @@ class Register extends React.Component{
                       API.post('doctor', values)
                       .then(res => {
                         console.log(res)
-                        this.props.history.push('\login')
+                        this.props.history.push('/login')
                         //this.setDialogMsg('Registro Exitoso','El paciente ' + values.nombre + ' ha sido registrado de manera correcta.')
                       })
                       .catch(error => {
@@ -143,7 +128,6 @@ class Register extends React.Component{
                       handleChange,
                       handleBlur,
                       handleSubmit,
-                      handleReset,
                       setFieldValue,
                       setFieldTouched
                     } = props;
@@ -386,13 +370,7 @@ class Register extends React.Component{
                           autoOk 
                           label="Inicio Fin" 
                           value={values.horario_fin} 
-                          onChange={value => {
-                            
-                            let time_init = new Date(values.horario_inicio).toLocaleTimeString('es-MX')
-                            let time_end = new Date(value).toLocaleTimeString('es-MX')
-                            let time_range = time_init + '-' + time_end
-                            console.log(time_init + '-' + time_end)
-                            setFieldValue('horario_fin',value)
+                          onChange={value => {setFieldValue('horario_fin',value)
                           }} />
                           </Col>
                         </MuiPickersUtilsProvider>

@@ -105,9 +105,6 @@ class LoginPage extends React.Component{
                             handleChange,
                             handleBlur,
                             handleSubmit,
-                            handleReset,
-                            setFieldValue,
-                            setFieldTouched
                             } = props;
                             return (
                             <Form onSubmit={handleSubmit}>

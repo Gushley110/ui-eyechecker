@@ -17,7 +17,6 @@
 
 */
 
-import Typography from "views/Typography.jsx";
 import Home from "views/Home.jsx";
 import Patients from "views/Patients/Patients.jsx";
 import Appointments from "views/Appointments/Appointments";
@@ -25,8 +24,6 @@ import CurrentAppointment from "views/Appointments/CurrentAppointment";
 import NewPatient from "views/Patients/NewPatient";
 import DetailPatient from "views/Patients/DetailPatient";
 import Account from "views/Account/Account"
-
-import LoginPage from "views/Login/LoginPage";
 import Analysis from "views/Analysis/Analysis";
 import DetailAnalysis from "views/Analysis/DetailAnalysis"
 import EditAccount from "views/Account/EditAccount";

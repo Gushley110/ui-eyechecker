@@ -22,9 +22,7 @@ import {
   Card,
   CardBody,
   Row,
-  Col,
-  Table,
-  CardTitle,
+  Col
 } from "reactstrap";
 import { NavLink } from "react-router-dom";
 import { Nav } from "reactstrap";
@@ -58,7 +56,6 @@ class CurrentAppointment extends React.Component {
       this.setState({user: data, reports: res.data});
       this.setState({last_report: this.state.reports[this.state.reports.length - 1]})
 
-      console.log(this.state.last_report.url)
     }
     
     setDialogOpen = (val) => {
