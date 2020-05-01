@@ -127,6 +127,7 @@ class Patients extends React.Component {
                 </Col>
             </Row>
             <Row>
+            {this.state.patients.length > 0 ? 
             <Col md="12">
               <Card>
                 <CardBody>
@@ -164,6 +165,16 @@ class Patients extends React.Component {
                 </CardBody>
               </Card>
             </Col>
+            :
+              <Col md="12">
+                <div className="text-muted">
+                <center>
+                  <span style={{fontSize: '12em'}}><i className="nc-icon nc-single-02" /></span> <br/>
+                  <span style={{fontSize: '1.6em'}}>Aún no tienes pacientes</span>
+                </center>
+                </div>
+              </Col>
+            }
             </Row>
             <Dialog
                   open={this.state.dialog_open}

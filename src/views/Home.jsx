@@ -99,7 +99,9 @@ class Home extends React.Component {
             </Row>
           <Row>
 
-            {this.state.appointments.map((appointment) => {
+            {this.state.appointments.length > 0 ? 
+            
+            this.state.appointments.map((appointment) => {
               return(
                 <React.Fragment key={appointment.id_cita} >
                 <Col lg="4" md="6" sm="6">
@@ -133,7 +135,18 @@ class Home extends React.Component {
                   </React.Fragment>
               )
             })
-
+            :
+            
+              <Col md="12">
+                <div className="text-muted">
+                <center>
+                  <span style={{fontSize: '12em'}}><i className="nc-icon nc-calendar-60" /></span> <br/>
+                  <span style={{fontSize: '1.6em'}}>No tienes citas para el día de hoy</span>
+                </center>
+                </div>
+              </Col>
+            
+            
             }
 
           </Row>

@@ -123,6 +123,7 @@ class Appointments extends React.Component {
     API.post('appointment', form_data )
       .then(res => {
         console.log(res.data)
+        this.props.history.push('/appointments')
         //this.setDialogMsg('Registro Exitoso','El paciente ' + values.nombre + ' ha sido registrado de manera correcta.')
         //this.setDialogOpen(false)
       })
@@ -181,6 +182,7 @@ class Appointments extends React.Component {
                 </Col>
             </Row>
             <Row>
+            {this.state.appointments.length > 0 ?
             <Col md="12">
               <Card>
                 <CardBody>
@@ -215,6 +217,16 @@ class Appointments extends React.Component {
                 </CardBody>
               </Card>
             </Col>
+            :
+            <Col md="12">
+              <div className="text-muted">
+              <center>
+                <span style={{fontSize: '12em'}}><i className="nc-icon nc-calendar-60" /></span> <br/>
+                <span style={{fontSize: '1.6em'}}>Aún no tienes citas</span>
+              </center>
+              </div>
+            </Col>
+            }
             </Row>
             <Dialog
               open={this.state.dialog_open}

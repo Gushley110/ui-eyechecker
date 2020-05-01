@@ -31,6 +31,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { format } from 'date-fns'
 import API from 'api'
 
 
@@ -126,7 +127,7 @@ class CurrentAppointment extends React.Component {
                 </Col>
                 <Col md="4">
                     <Nav>
-                      <NavLink className="btn btn-primary" to="/admin/new_patient">
+                      <NavLink className="btn btn-primary" to="/admin/analysis">
                         Nuevo Análisis
                       </NavLink>
                     </Nav>
@@ -241,42 +242,57 @@ class CurrentAppointment extends React.Component {
                     <h6>Estado del último reporte</h6>
                 </Col>
 
-            <Card>
-                <CardBody>
                 
-                  <Row>
-                    <Col md="4">
-                        <span className="text-muted">Nombre de archivo</span>
-                    </Col>
-                    <Col md="3">
-                        <span className="text-muted">Fecha de realización</span>
-                    </Col>
-                    <Col md="5">
-                        <span className="text-muted">Comentarios</span>
-                    </Col>  
-                  </Row>
 
-                  <hr/>
+              <Card>
+                  <CardBody>
                   
+                  {this.state.last_report ? 
+                  <>
+                    <Row>
+                      <Col md="4">
+                          <span className="text-muted">Nombre de archivo</span>
+                      </Col>
+                      <Col md="3">
+                          <span className="text-muted">Fecha de realización</span>
+                      </Col>
+                      <Col md="5">
+                          <span className="text-muted">Comentarios</span>
+                      </Col>  
+                    </Row>
 
-                  <Row>
-                    <Col md="4">
-                      <a href="#">{this.state.last_report.url}</a>
-                    </Col>
-                    <Col md="3">
-                        Una fecha
-                    </Col>
-                    <Col md="5">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi omnis, possimus sit at in aspernatur sed vero optio corrupti magnam iste mollitia maxime magni! Laborum ducimus obcaecati eius illo hic.
-                    </Col>
+                    <hr/>
                     
-                  </Row>
-                  <hr/>
-                  
-                  
-                </CardBody>
-              </Card>
-                
+
+                    <Row>
+                      <Col md="4">
+                        <a href="#">{this.state.last_report.url}</a>
+                      </Col>
+                      <Col md="3">
+                          Una fecha
+                      </Col>
+                      <Col md="5">
+                          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi omnis, possimus sit at in aspernatur sed vero optio corrupti magnam iste mollitia maxime magni! Laborum ducimus obcaecati eius illo hic.
+                      </Col>
+                      
+                    </Row>
+                    <hr/>
+                  </>
+                    :
+                    <Row>
+                    <Col md="12">
+                      <div className="text-muted">
+                      <center>
+                        <span style={{fontSize: '8em'}}><i className="nc-icon nc-paper" /></span> <br/>
+                        <span style={{fontSize: '1.6em'}}>No hay reportes</span>
+                      </center>
+                      </div>
+                    </Col>
+                    </Row>
+                    }
+                  </CardBody>
+                </Card>
+              
             </Col>
 
             <Col md="4"> {/* Side Container */}
@@ -289,6 +305,8 @@ class CurrentAppointment extends React.Component {
                 </Row>
                 <CardBody>
                 
+                {this.state.last_report ?
+                <>
                   <Row>
                     <Col md="7">
                         <span className="text-muted">Nombre de archivo</span>
@@ -318,8 +336,19 @@ class CurrentAppointment extends React.Component {
 
                   
                   <hr/>
-                  
-                  
+                </>
+                :
+                <Row>
+                    <Col md="12">
+                      <div className="text-muted">
+                      <center>
+                        <span style={{fontSize: '8em'}}><i className="nc-icon nc-paper" /></span> <br/>
+                        <span style={{fontSize: '1.6em'}}>No hay reportes</span>
+                      </center>
+                      </div>
+                    </Col>
+                  </Row>
+              }
                 </CardBody>
               </Card>
             </Col>

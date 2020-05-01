@@ -17,6 +17,10 @@ export const validateLogin = () => {
 }
 
 export const logOut = () => {
-    localStorage.clear()
+    localStorage.removeItem('logged')
+    
+    localStorage.removeItem('id_doctor')
+    localStorage.removeItem('id_persona')
+    localStorage.removeItem('id_account')
     history.push('/login')
 }
