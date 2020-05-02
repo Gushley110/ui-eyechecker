@@ -77,11 +77,12 @@ class Home extends React.Component {
       return format(new Date(), 'yyyy-MM-dd')
     }
 
-    handleAppointmentClick(id_cita, id_paciente){
+    handleAppointmentClick(id_cita, id_paciente, id_persona){
       
       let o = {
         'id_cita': id_cita,
-        'id_paciente': id_paciente
+        'id_paciente': id_paciente,
+        'id_persona': id_persona        
       }
 
       this.props.history.push('/admin/current_appointment', {values: o})
@@ -111,7 +112,7 @@ class Home extends React.Component {
                         <Row>
                           <Col md="12">
                           <div className="numbers">
-                              <CardTitle tag="p">10:30 - 12:00 [Horario]</CardTitle>
+              <CardTitle tag="p">{appointment.hora_agendada}</CardTitle>
                               <p className="card-category">{appointment.nombre}</p>
                               <p />
                             </div>
@@ -120,7 +121,7 @@ class Home extends React.Component {
                       </CardBody>
                       <CardFooter>
                         <hr />
-                      <Form onSubmit={(e) => {e.preventDefault(); this.handleAppointmentClick(appointment.id_cita,appointment.id_paciente)}}>
+                      <Form onSubmit={(e) => {e.preventDefault(); this.handleAppointmentClick(appointment.id_cita,appointment.id_paciente,appointment.id_persona)}}>
                         <Button
                             className="pull-right"
                             color="primary"

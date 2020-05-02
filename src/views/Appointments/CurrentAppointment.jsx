@@ -42,6 +42,7 @@ class CurrentAppointment extends React.Component {
           user: "",
           dialog_open: false,
           id_patient: this.props.location.state.values.id_paciente,
+          id_persona: this.props.location.state.values.id_persona,
           reports: [],
           last_report: "",
           id_to_delete: -1
@@ -50,8 +51,9 @@ class CurrentAppointment extends React.Component {
 
     async componentDidMount() {
       let id_patient = this.state.id_patient
-      let id = 28
-      const {data} = await API.get('patient', { params: {id: id} });
+      let id_persona = this.state.id_persona
+      
+      const {data} = await API.get('patient', { params: {id: id_persona} });
       const res = await API.get('patient/analysis/list',{ params: {id: id_patient} })
 
       this.setState({user: data, reports: res.data});
@@ -115,6 +117,16 @@ class CurrentAppointment extends React.Component {
 
       console.log('Has clickeado ' + patient.id_paciente)
     }
+
+    goToAnalysis = () => {
+
+      let o = {
+        'id_paciente': this.state.id_patient,
+        'id_persona': this.state.id_persona
+      }
+
+      this.props.history.push('/admin/analysis',{values: o})
+    }
       
   render() {
 
@@ -127,9 +139,9 @@ class CurrentAppointment extends React.Component {
                 </Col>
                 <Col md="4">
                     <Nav>
-                      <NavLink className="btn btn-primary" to="/admin/analysis">
+                      <Button className="btn btn-primary" onClick={this.goToAnalysis}>
                         Nuevo Análisis
-                      </NavLink>
+                      </Button>
                     </Nav>
                 </Col>
             </Row>

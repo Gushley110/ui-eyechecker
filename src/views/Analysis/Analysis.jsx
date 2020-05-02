@@ -53,16 +53,16 @@ class Analysis extends React.Component {
           imageurl_left: null,
           imageurl_right: null,
           loading: true,
-          id_to_load: -1,
+          id_paciente: this.props.location.state.values.id_paciente,
+          id_persona: this.props.location.state.values.id_persona,
           id_to_delete: -1
         };
     }
 
     async componentDidMount() {
-      let id = this.state.id_to_load
-      id = 20
-      const {data} = await API.get('doctor', { params: {id: id} });
-	    this.setState({user: data});
+      console.log(this.state.id_paciente)
+      console.log(this.state.id_persona)
+      console.log(localStorage.getItem('id_doctor'))
     }
     
     setDialogOpen = (val) => {
@@ -85,12 +85,13 @@ class Analysis extends React.Component {
     handleSubmit = (e) => {
       e.preventDefault()
 
-      let id_paciente = 17
-      let id_medico = 10
+      let id_paciente = this.state.id_paciente
+      let id_persona = this.state.id_persona
+      let id_medico = localStorage.getItem('id_doctor')
 
       let formData = new FormData()
 
-      formData.append('id', id_paciente)
+      formData.append('id', id_persona)
       formData.append('id_medico', id_medico)
       formData.append('left_eye', this.state.imageurl_left)
       formData.append('right_eye', this.state.imageurl_right)

@@ -73,6 +73,7 @@ class Patients extends React.Component {
 
     handleDeleteClick = event => {
       event.preventDefault()
+      event.stopPropagation()
 
       let id = event.target.id
       let name
@@ -103,8 +104,7 @@ class Patients extends React.Component {
       })
     }
 
-    handleItemClick = (event,patient) => {
-      event.preventDefault()
+    handleItemClick = (patient) => {
 
       this.props.history.push('/admin/detail_patient', {id_to_load: patient.id_persona})
       
@@ -146,11 +146,13 @@ class Patients extends React.Component {
                       
                       {this.state.patients.map((patient) => {
                         return (
-                          <tr key={patient.id_paciente} onClick={(e) => this.handleItemClick(e,patient)}>
+                          <tr key={patient.id_paciente} onClick={(e) => {this.handleItemClick(patient)}}>
+                            
                             <td>{patient.curp}</td>
 							              <td>{patient.nombre}</td>
                             <td>{patient.fecha_nacimiento}</td>
                             <td>{patient.email}</td>
+                            
                             <td>
                               <Button id={patient.id_paciente} onClick={this.handleEdit}>Editar</Button>
                               <span>  </span>

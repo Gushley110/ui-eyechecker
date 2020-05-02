@@ -123,7 +123,9 @@ class Appointments extends React.Component {
     API.post('appointment', form_data )
       .then(res => {
         console.log(res.data)
-        this.props.history.push('/appointments')
+        this.setDialogOpen(false)
+        this.props.history.push('/admin/appointments')
+
         //this.setDialogMsg('Registro Exitoso','El paciente ' + values.nombre + ' ha sido registrado de manera correcta.')
         //this.setDialogOpen(false)
       })
@@ -203,7 +205,7 @@ class Appointments extends React.Component {
                             <td>{appointment.nombre}</td>
 							              <td>{appointment.fecha_agendada}</td>
                             <td>{appointment.fecha_creacion} </td>
-                            <td> Un estado </td>
+                            <td>{appointment.estado_cita}</td>
                             <td>
                               <Button id={appointment.id_cita} onClick={this.handleEdit}>Editar</Button>
                               <span>  </span>
