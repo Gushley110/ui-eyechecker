@@ -30,9 +30,10 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
-
-
+import { pdfjs, Document, Page } from 'react-pdf/dist/entry.webpack';
 import API from 'api'
+
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 
 class DetailAnalysis extends React.Component {
@@ -41,8 +42,8 @@ class DetailAnalysis extends React.Component {
         this.state = {
           user: "",
           dialog_open: false,
-          id_to_load: -1,
-          id_to_delete: -1,
+          file: require('assets/reports/17042020013859.pdf'),
+          id_to_load: this.props.location.state.values.id_reporte,
           numPages : null,
           pageNumber : 1
         };
@@ -54,9 +55,14 @@ class DetailAnalysis extends React.Component {
 
     async componentDidMount() {
       let id = this.state.id_to_load
-      id = 16 //Remove this after redux implementation
-      const {data} = await API.get('patient', { params: {id: id} });
-	    this.setState({user: data});
+      //const pdfFile = await import('17042020013859.pdf')
+      //this.setState({file: pdfFile})
+      //TODO show PDF
+      //const {data} = await API.get('patient', { params: {id: id} });
+      //this.setState({user: data});
+      
+      console.log(this.state.id_to_load)
+      console.log(this.props.location.state.values.pdf_path)
     }
     
     setDialogOpen = (val) => {
@@ -97,6 +103,8 @@ class DetailAnalysis extends React.Component {
     }
       
   render() {
+
+    const { pageNumber, numPages, file } = this.state;
 
     return (
       <>
@@ -160,7 +168,13 @@ class DetailAnalysis extends React.Component {
                 <Card>
                 <CardBody>
                   
-                
+                <Document
+                  file={file}
+                  onLoadSuccess={this.onDocumentLoadSuccess}
+                >
+                  <Page pageNumber={pageNumber} />
+                </Document>
+                <p>Page {pageNumber} of {numPages}</p>
                   
                 </CardBody>
                 </Card>

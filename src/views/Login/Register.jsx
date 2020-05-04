@@ -22,6 +22,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import { FormControl, FormHelperText } from "@material-ui/core";
 import { TimePicker } from "@material-ui/pickers";
+import { format } from 'date-fns'
 import esLocale from "date-fns/locale/es";
 import API from 'api'
 
@@ -73,7 +74,7 @@ class Register extends React.Component{
 
                       let time_init = new Date(values.horario_inicio).toLocaleTimeString('es-MX')
                       let time_end = new Date(values.horario_fin).toLocaleTimeString('es-MX')
-                      let time_range = time_init + '-' + time_end
+                      let time_range = time_init + ' - ' + time_end
                       values.horario = time_range
                       delete values.horario_inicio
                       delete values.horario_fin
@@ -88,7 +89,8 @@ class Register extends React.Component{
                         //this.setDialogMsg('Error','Hubo un error al registrar el paciente.')
                         //console.log(error)
                       })
-                    }}
+                    }
+                  }
 
                     validationSchema={Yup.object().shape({
                       email: Yup.string()

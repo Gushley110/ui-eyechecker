@@ -78,7 +78,6 @@ class Appointments extends React.Component {
 
   setDialogMsg = (title,msg) => {
     this.setState({dialog_title: title,dialog_message: msg})
-    this.setDialogOpen(true)
   }		  
 
   setIdToDelete = (id) => {
@@ -87,6 +86,7 @@ class Appointments extends React.Component {
 
   handleClose = () => {
     this.setDialogOpen(false)
+    this.setDialogMsg('','')
   }
 
   handleDeleteClick = event => {
@@ -123,8 +123,8 @@ class Appointments extends React.Component {
     API.post('appointment', form_data )
       .then(res => {
         console.log(res.data)
-        this.setDialogOpen(false)
-        this.props.history.push('/admin/appointments')
+        this.closeAppointmentForm()
+        this.forceUpdate()
 
         //this.setDialogMsg('Registro Exitoso','El paciente ' + values.nombre + ' ha sido registrado de manera correcta.')
         //this.setDialogOpen(false)
@@ -146,9 +146,9 @@ class Appointments extends React.Component {
 
     let id = this.state.id_to_delete
     
-    let new_appointments = this.state.appointments.filter((item) => item.id_paciente != id)
+    let new_appointments = this.state.appointments.filter((item) => item.id_cita!= id)
     
-    API.delete('patient', { params: {id: id} })
+    API.put('appointment', { id: id, estado_cita: 2 })
     .then(res => {
       this.setDialogOpen(false)
       this.setState({appointments: new_appointments})

@@ -41,6 +41,7 @@ import { default as Btn } from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 
+
 import API from 'api'
 
 
@@ -59,12 +60,6 @@ class Analysis extends React.Component {
         };
     }
 
-    async componentDidMount() {
-      console.log(this.state.id_paciente)
-      console.log(this.state.id_persona)
-      console.log(localStorage.getItem('id_doctor'))
-    }
-    
     setDialogOpen = (val) => {
       this.setState({dialog_open: val})
     }
@@ -97,12 +92,14 @@ class Analysis extends React.Component {
       formData.append('right_eye', this.state.imageurl_right)
 
       this.setState({loading: true})
-      this.setDialogMsg('Realizando análisis','Se está realizando el análisis espere unos momentos')
+      this.setDialogMsg('Realizando análisis','Se está realizando el análisis espere un momento.')
 
       API.post('patient/analysis', formData)
                       .then(res => {
                         //this.setDialogMsg('Registro Exitoso','El paciente ' + values.nombre + ' ha sido registrado de manera correcta.')
                         this.setDialogOpen(false)
+                        
+                        this.props.history.push('/admin/detail_analysis',{values: res.data})
                       })
                       .catch(error => {
                         this.setState({loading: false})

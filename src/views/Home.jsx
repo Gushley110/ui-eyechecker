@@ -84,12 +84,16 @@ class Home extends React.Component {
         'id_paciente': id_paciente,
         'id_persona': id_persona        
       }
-
-      this.props.history.push('/admin/current_appointment', {values: o})
       
+      API.put('appointment', {id: id_cita, estado_cita: 4})
+        .then(res => {
+          this.props.history.push('/admin/current_appointment', {values: o})
+        })
+
     }
 
   render() {
+
     return (
       <>
         <div className="content">
@@ -112,22 +116,26 @@ class Home extends React.Component {
                         <Row>
                           <Col md="12">
                           <div className="numbers">
-              <CardTitle tag="p">{appointment.hora_agendada}</CardTitle>
+                          <CardTitle tag="p">{appointment.hora_agendada}</CardTitle>
                               <p className="card-category">{appointment.nombre}</p>
-                              <p />
+                              <p className="card-category">{appointment.estado_cita}</p>
+                              
                             </div>
                           </Col>
                         </Row>
                       </CardBody>
                       <CardFooter>
                         <hr />
-                      <Form onSubmit={(e) => {e.preventDefault(); this.handleAppointmentClick(appointment.id_cita,appointment.id_paciente,appointment.id_persona)}}>
+                      <Form onSubmit={(e) => {
+                        e.preventDefault(); 
+                        this.handleAppointmentClick(appointment.id_cita,appointment.id_paciente,appointment.id_persona)}}>
+                        {/*TODO Validate state and show the corresponding button*/}
                         <Button
                             className="pull-right"
                             color="primary"
                             type="submit"
                         >
-                            Atender Cita
+                          {appointment.estado_cita == 'Sin atender' ? 'Atender Cita' : 'Continuar cita'}
                         </Button>
                       </Form>
                       </CardFooter>

@@ -281,10 +281,10 @@ class CurrentAppointment extends React.Component {
                         <a href="#">{this.state.last_report.url}</a>
                       </Col>
                       <Col md="3">
-                          Una fecha
+                          {this.state.last_report.fecha_creacion}
                       </Col>
                       <Col md="5">
-                          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi omnis, possimus sit at in aspernatur sed vero optio corrupti magnam iste mollitia maxime magni! Laborum ducimus obcaecati eius illo hic.
+                          {this.state.last_report.comentarios}
                       </Col>
                       
                     </Row>
@@ -339,7 +339,8 @@ class CurrentAppointment extends React.Component {
                           <span onClick={() => window.open(report.url,"_blank")}>sdfsdf</span>
                         </Col>
                         <Col md="5">
-                            Una fecha
+                            {/*TODO Give format to date*/}
+                            {report.fecha_creacion}
                         </Col>
                       </Row>
                       </React.Fragment>

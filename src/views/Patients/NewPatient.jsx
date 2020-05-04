@@ -87,9 +87,9 @@ class NewPatient extends React.Component {
     return arr_res
   }
 
-  handleTextArea = text => {
-    let arr_text = text.split(',')  
-  
+  handleTextArea(text){
+    let arr_text = text.split(',')
+
     return arr_text
   }
 

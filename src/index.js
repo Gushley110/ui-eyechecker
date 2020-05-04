@@ -19,7 +19,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import history from './history'
-import { Router, Route, Switch } from "react-router-dom";
+import { Router, Route, Switch, Redirect } from "react-router-dom";
 
 
 import "bootstrap/dist/css/bootstrap.css";
@@ -41,6 +41,7 @@ ReactDOM.render(
       <Route path="/admin" render={props => <AdminLayout {...props} />} />
       <Route path="/register" component={Register} />
       <Route path="/password_recover" component={Recover} />
+      <Redirect to="/login"></Redirect>
     </Switch>
   </Router>,
   document.getElementById("root")
