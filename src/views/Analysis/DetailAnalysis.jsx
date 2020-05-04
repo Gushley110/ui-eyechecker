@@ -57,7 +57,7 @@ class DetailAnalysis extends React.Component {
       let id = this.state.id_to_load
       //const pdfFile = await import('17042020013859.pdf')
       //this.setState({file: pdfFile})
-      //TODO show PDF
+      //TODO show correct pdf, try to render from variable
       //const {data} = await API.get('patient', { params: {id: id} });
       //this.setState({user: data});
       

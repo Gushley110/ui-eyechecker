@@ -40,8 +40,6 @@ import Typography from '@material-ui/core/Typography';
 import { default as Btn } from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-
-
 import API from 'api'
 
 
