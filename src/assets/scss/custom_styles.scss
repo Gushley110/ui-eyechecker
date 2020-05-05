@@ -100,3 +100,11 @@ table.clickable tbody tr{
 table.clickable tbody tr:hover{
     background-color: darken($white,3%);
 }
+
+.item-clickable{
+    cursor: pointer;
+}
+
+.item-clickable:hover{
+    background-color: darken($white,3%);
+}

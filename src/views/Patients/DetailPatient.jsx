@@ -40,18 +40,19 @@ class DetailPatient extends React.Component {
           user: "",
           reports: [],
           dialog_open: false,
-          id_to_load: this.props.location.state.id_to_load,
+          id_patient: this.props.location.state.id_paciente,
+          id_persona: this.props.location.state.id_persona,
           id_to_delete: -1
         };
     }
 
     async componentDidMount() {
-      let id = this.state.id_to_load
+      const { id_patient, id_persona } = this.state
       
-      const {data} = await API.get('patient', { params: {id: id} });
+      const {data} = await API.get('patient', { params: {id: id_persona} });
       this.setState({user: data});
       
-      const response = await API.get('patient/analysis/list', { params: {id: id}})
+      const response = await API.get('patient/analysis/list', { params: {id: id_patient}})
       this.setState({reports: response.data})
 
     }
@@ -71,6 +72,12 @@ class DetailPatient extends React.Component {
 
     handleClose = () => {
       this.setDialogOpen(false)
+    }
+
+    handleItemClick = (report) => {
+
+      this.props.history.push('/admin/detail_analysis', {values: {id_reporte: report.id_reporte}})
+      
     }
       
   render() {
@@ -196,10 +203,11 @@ class DetailPatient extends React.Component {
             </Row>
 
             <Row>
+            {this.state.reports.length > 0 ? 
                 <Col md="12">
                 <Card>
                 <CardBody>
-                  <Table responsive>
+                  <Table responsive className="clickable">
                     <thead className="text-primary">
                       <tr>
                         <td>Nombre de archivo</td>
@@ -210,10 +218,10 @@ class DetailPatient extends React.Component {
                     <tbody>
                     {this.state.reports.map((report) => {
                         return (
-                          <tr key={report.id} >
+                          <tr key={report.id} onClick={(e) => {this.handleItemClick(report)}}>
                             <td><a href={report.url}>{report.url}</a></td>
-                            <td>Una fecha</td>
-							              <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique quisquam alias facilis sed saepe hic rerum nostrum deserunt dolor et exercitationem nemo quia aut voluptates, perferendis esse molestias eius sequi!</td>
+                            <td>{report.fecha_creacion}</td>
+                        <td>{report.comentarios}</td>
                           </tr>
                         )
                       })}
@@ -222,6 +230,16 @@ class DetailPatient extends React.Component {
                 </CardBody>
               </Card>
                 </Col>
+            :
+            <Col md="12">
+              <div className="text-muted">
+              <center>
+                <span style={{fontSize: '12em'}}><i className="nc-icon nc-single-02" /></span> <br/>
+                <span style={{fontSize: '1.6em'}}>Aún no tienes pacientes</span>
+              </center>
+              </div>
+            </Col>  
+          }
             </Row>
 
             <Dialog

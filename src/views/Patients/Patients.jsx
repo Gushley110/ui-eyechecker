@@ -106,7 +106,7 @@ class Patients extends React.Component {
 
     handleItemClick = (patient) => {
 
-      this.props.history.push('/admin/detail_patient', {id_to_load: patient.id_persona})
+      this.props.history.push('/admin/detail_patient', {id_persona: patient.id_persona, id_paciente: patient.id_paciente})
       
     }
       

@@ -127,8 +127,16 @@ class CurrentAppointment extends React.Component {
 
       this.props.history.push('/admin/analysis',{values: o})
     }
+
+    handleItemClick = (report) => {
+
+      this.props.history.push('/admin/detail_analysis', {values: {id_reporte: report.id}})
+      
+    }
       
   render() {
+
+    const { user, reports, last_report } = this.state
 
     return (
       <>
@@ -155,13 +163,13 @@ class CurrentAppointment extends React.Component {
                       <span className="text-muted">NOMBRE</span>
                     </Col>
                     <Col md="4">
-                    {this.state.user.nombre}
+                    {user.nombre}
                     </Col>
                     <Col md="2">
                     <span className="text-muted">FECHA DE NACIMIENTO</span>
                     </Col>
                     <Col md="4">
-                    {this.state.user.fecha_nacimiento}
+                    {user.fecha_nacimiento}
                     </Col>
                     
                   </Row>
@@ -171,13 +179,13 @@ class CurrentAppointment extends React.Component {
                       <span className="text-muted">CURP</span>
                     </Col>
                     <Col md="4">
-                    {this.state.user.curp}
+                    {user.curp}
                     </Col>
                     <Col md="2">
                     <span className="text-muted">GÉNERO</span>
                     </Col>
                     <Col md="4">
-                    {this.state.user.genero}
+                    {user.genero}
                     </Col>
                     
                   </Row>
@@ -187,13 +195,13 @@ class CurrentAppointment extends React.Component {
                       <span className="text-muted">EMAIL</span>
                     </Col>
                     <Col md="4">
-                    {this.state.user.email}
+                    {user.email}
                     </Col>
                     <Col md="2">
                     <span className="text-muted">NÚMERO TELEFÓNICO</span>
                     </Col>
                     <Col md="4">
-                    {this.state.user.telefono_celular}
+                    {user.telefono_celular}
                     </Col>
                     
                   </Row>
@@ -203,13 +211,13 @@ class CurrentAppointment extends React.Component {
                       <span className="text-muted">ESTADO CIVIL</span>
                     </Col>
                     <Col md="4">
-                    {this.state.user.estado_civil}
+                    {user.estado_civil}
                     </Col>
                     <Col md="2">
                     <span className="text-muted">OCUPACIÓN</span>
                     </Col>
                     <Col md="4">
-                    {this.state.user.ocupacion}
+                    {user.ocupacion}
                     </Col>
                     
                   </Row>
@@ -219,13 +227,13 @@ class CurrentAppointment extends React.Component {
                       <span className="text-muted">MEDICAMENTOS</span>
                     </Col>
                     <Col md="4">
-                    {this.state.user.medicamentos}
+                    {user.medicamentos}
                     </Col>
                     <Col md="2">
                     <span className="text-muted">ENFERMEDADES CRÓNICAS</span>
                     </Col>
                     <Col md="4">
-                    {this.state.user.enfermedades_cronicas}
+                    {user.enfermedades_cronicas}
                     </Col>
                     
                   </Row>
@@ -235,13 +243,13 @@ class CurrentAppointment extends React.Component {
                       <span className="text-muted">ENFERMEDADES HEREDITARIAS</span>
                     </Col>
                     <Col md="4">
-                    {this.state.user.enfermedades_hereditarias}
+                    {user.enfermedades_hereditarias}
                     </Col>
                     <Col md="2">
                     <span className="text-muted">ENFERMEDADES RECIENTES</span>
                     </Col>
                     <Col md="4">
-                    {this.state.user.enfermedades_recientes}
+                    {user.enfermedades_recientes}
                     </Col>
                     
                   </Row>
@@ -259,7 +267,7 @@ class CurrentAppointment extends React.Component {
               <Card>
                   <CardBody>
                   
-                  {this.state.last_report ? 
+                  {last_report ? 
                   <>
                     <Row>
                       <Col md="4">
@@ -276,15 +284,15 @@ class CurrentAppointment extends React.Component {
                     <hr/>
                     
 
-                    <Row>
+                    <Row className="item-clickable" onClick={(e) => {this.handleItemClick(last_report)}}>
                       <Col md="4">
-                        <a href="#">{this.state.last_report.url}</a>
+                        <a href="#">{last_report.url}</a>
                       </Col>
                       <Col md="3">
-                          {this.state.last_report.fecha_creacion}
+                          {last_report.fecha_creacion}
                       </Col>
                       <Col md="5">
-                          {this.state.last_report.comentarios}
+                          {last_report.comentarios}
                       </Col>
                       
                     </Row>
@@ -317,7 +325,7 @@ class CurrentAppointment extends React.Component {
                 </Row>
                 <CardBody>
                 
-                {this.state.last_report ?
+                {last_report ?
                 <>
                   <Row>
                     <Col md="7">
@@ -330,16 +338,15 @@ class CurrentAppointment extends React.Component {
 
                   <hr/>
 
-                  {this.state.reports.map((report) => {
+                  {reports.map((report) => {
                     return(
                       <React.Fragment key={report.id}>
-                      <Row>
+                      <Row className="item-clickable" onClick={(e) => {this.handleItemClick(report)}}>
                         <Col md="7">
                           <a href={report.url} target="_blank">{report.url}</a>
                           <span onClick={() => window.open(report.url,"_blank")}>sdfsdf</span>
                         </Col>
                         <Col md="5">
-                            {/*TODO Give format to date*/}
                             {report.fecha_creacion}
                         </Col>
                       </Row>

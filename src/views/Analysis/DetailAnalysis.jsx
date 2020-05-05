@@ -45,24 +45,38 @@ class DetailAnalysis extends React.Component {
           file: require('assets/reports/17042020013859.pdf'),
           id_to_load: this.props.location.state.values.id_reporte,
           numPages : null,
-          pageNumber : 1
+          pageNumber : 1,
+          comment: "",
+          comment_set: false
         };
     }
 
-    onDocumentLoadSuccess = ({ numPages }) => {
-        this.setState({ numPages });
-      };
+    onDocumentLoadSuccess = (document) => {
+      const { numPages } = document;
+      this.setState({
+        numPages,
+        pageNumber: 1,
+      });
+    };
+
+    changePage = offset => this.setState(prevState => ({
+      pageNumber: prevState.pageNumber + offset,
+    }));
+  
+    previousPage = () => this.changePage(-1);
+  
+    nextPage = () => this.changePage(1);
 
     async componentDidMount() {
       let id = this.state.id_to_load
-      //const pdfFile = await import('17042020013859.pdf')
-      //this.setState({file: pdfFile})
+      
       //TODO show correct pdf, try to render from variable
       //const {data} = await API.get('patient', { params: {id: id} });
       //this.setState({user: data});
+
+      // !FIXME genera código bien bonito  
       
       console.log(this.state.id_to_load)
-      console.log(this.props.location.state.values.pdf_path)
     }
     
     setDialogOpen = (val) => {
@@ -71,7 +85,6 @@ class DetailAnalysis extends React.Component {
 
     setDialogMsg = (title,msg) => {
       this.setState({dialog_title: title,dialog_message: msg})
-      this.setDialogOpen(true)
     }		  
 
     setIdToDelete = (id) => {
@@ -82,29 +95,30 @@ class DetailAnalysis extends React.Component {
       this.setDialogOpen(false)
     }
 
-    handleDeleteClick = event => {
-      event.preventDefault()
+    handleChange = (e) => {
+      this.setState({comment: e.target.value})
+    }
 
-      let msg = 'Se perderán los datos de tus pacientes y análisis realizados,' +
-       'la información no podrá ser recuperada y no podrás volver a acceder' +
-       'al sistema sin crear una cuenta nueva'
+    handleSubmit = () => {
+      const { id_to_load, comment } = this.state
 
-      /*let id = event.target.id
-      let name
-      this.state.patients.map((item) => {
-        if(item.id_paciente == id){
-          name = item.nombre
-        }
-      })*/
+      const formData = new FormData()
 
-      this.setDialogOpen(true)
-      this.setDialogMsg('¿Estás seguro de querer eliminar tu cuenta?', msg)
-      //this.setIdToDelete(id)
+      formData.append('id_reporte', id_to_load)
+      formData.append('comentario', comment)
+
+      API.post('patient/analysis/comment', formData)
+        .then(res => {
+          
+          this.setDialogMsg('Comentario', res.data.status)
+          this.setDialogOpen(true)
+
+        })
     }
       
   render() {
 
-    const { pageNumber, numPages, file } = this.state;
+    const { pageNumber, numPages, file, comment } = this.state;
 
     return (
       <>
@@ -115,7 +129,7 @@ class DetailAnalysis extends React.Component {
                 </Col>
             </Row>
             <Row>
-            <Col md="4">
+            <Col md="6">
               <Card>
                 <CardBody>
 
@@ -146,35 +160,72 @@ class DetailAnalysis extends React.Component {
                   <hr/>
 
                   <Row>
+                    <Col md="12">
                     
                   <TextField multiline type="textarea" 
                           label="Agregue un comentario"
                           id="medicamentos" 
                           rows="5" 
                           size="medium"
+                          value={comment}
+                          onChange={this.handleChange}
                           fullWidth
                           />
+                    </Col>
 
                   </Row>
-                  <hr/>
-                  
 
-                  
+                  <Row>
+                    <Col md="3"></Col>
+                    <Col md="6">
+                      <Button 
+                        color="primary"
+                        onClick={this.handleSubmit}>
+                        Agregar comentario
+                      </Button>
+                    </Col>
+                    <Col md="3"></Col>
+                  </Row>
+                  <hr/>
+
                 </CardBody>
               </Card>
             </Col>
 
-            <Col md="8">
+            <Col md="6">
                 <Card>
                 <CardBody>
-                  
+                <center>
                 <Document
                   file={file}
                   onLoadSuccess={this.onDocumentLoadSuccess}
                 >
-                  <Page pageNumber={pageNumber} />
+                  <Page 
+                  pageNumber={pageNumber} 
+                  height={700}
+                  loading="Cargando"/>
                 </Document>
-                <p>Page {pageNumber} of {numPages}</p>
+                
+                <div>
+                  <p>
+                    Página {pageNumber || (numPages ? 1 : '--')} de {numPages || '--'}
+                  </p>
+                  <Button
+                    color="primary"
+                    disabled={pageNumber <= 1}
+                    onClick={this.previousPage}
+                  >
+                    Anterior
+                  </Button>
+                  <Button
+                    color="primary"
+                    disabled={pageNumber >= numPages}
+                    onClick={this.nextPage}
+                  >
+                    Siguiente
+                  </Button>
+                </div>
+                </center>
                   
                 </CardBody>
                 </Card>
@@ -194,8 +245,7 @@ class DetailAnalysis extends React.Component {
                     </DialogContentText>
                   </DialogContent>
                   <DialogActions>
-                    <Button onClick={this.handleClose} color="warning">Cancelar</Button>
-                    <Button onClick={this.handleDelete} color="primary" autoFocus>
+                    <Button onClick={this.handleClose} color="primary" autoFocus>
                       Aceptar
                     </Button>
                   </DialogActions>
