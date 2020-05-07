@@ -76,7 +76,7 @@ class DetailPatient extends React.Component {
 
     handleItemClick = (report) => {
 
-      this.props.history.push('/admin/detail_analysis', {values: {id_reporte: report.id_reporte}})
+      this.props.history.push('/admin/detail_analysis', {values: {id_reporte: report.id, comment: report.comentarios}})
       
     }
       

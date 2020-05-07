@@ -31,6 +31,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import { pdfjs, Document, Page } from 'react-pdf/dist/entry.webpack';
+import PDFfile from '06052020192632.pdf'
 import API from 'api'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
@@ -40,14 +41,16 @@ class DetailAnalysis extends React.Component {
     constructor(props) {
 		super(props);
         this.state = {
-          user: "",
+          report: "",
           dialog_open: false,
-          file: require('assets/reports/17042020013859.pdf'),
+          file: null,
           id_to_load: this.props.location.state.values.id_reporte,
+          id_patient: this.props.location.state.values.id_paciente,
+          id_persona: this.props.location.state.values.id_persona,
+          id_cita: this.props.location.state.values.id_cita,
           numPages : null,
           pageNumber : 1,
-          comment: "",
-          comment_set: false
+          comment: this.props.location.state.values.comment
         };
     }
 
@@ -57,6 +60,7 @@ class DetailAnalysis extends React.Component {
         numPages,
         pageNumber: 1,
       });
+      //this.props.location.state.values.pdf_name
     };
 
     changePage = offset => this.setState(prevState => ({
@@ -69,12 +73,13 @@ class DetailAnalysis extends React.Component {
 
     async componentDidMount() {
       let id = this.state.id_to_load
+
+      this.setState({file: require('06052020192632.pdf')})
       
       //TODO show correct pdf, try to render from variable
-      //const {data} = await API.get('patient', { params: {id: id} });
-      //this.setState({user: data});
+      const {data} = await API.get('patient/analysis/get', { params: {id_reporte: id} });
+      this.setState({report: data});
 
-      // !FIXME genera código bien bonito  
       
       console.log(this.state.id_to_load)
     }
@@ -112,13 +117,25 @@ class DetailAnalysis extends React.Component {
           
           this.setDialogMsg('Comentario', res.data.status)
           this.setDialogOpen(true)
-
         })
+    }
+
+    handleAcceptClick = () => {
+
+      const { id_cita, id_patient, id_persona } = this.state
+
+      let o = {
+        'id_cita': id_cita,
+        'id_paciente': id_patient,
+        'id_persona': id_persona        
+      }
+
+      this.props.history.push('/admin/current_appointment', {values: o})
     }
       
   render() {
 
-    const { pageNumber, numPages, file, comment } = this.state;
+    const { pageNumber, numPages, file, comment, report } = this.state;
 
     return (
       <>
@@ -144,7 +161,7 @@ class DetailAnalysis extends React.Component {
                             <span className="text-muted">FECHA</span>
                         </Col>
                         <Col md="8">
-                            Una fecha
+                            {report.fecha}
                         </Col>
                     </Row>
                   <hr/>
@@ -154,7 +171,7 @@ class DetailAnalysis extends React.Component {
                             <span className="text-muted">REPORTE</span>
                         </Col>
                         <Col md="8">
-                            <a href="/">asdfjkjbdsf.pdf</a>
+                            <a href={PDFfile}>{report.nombre_reporte}</a>
                         </Col>
                     </Row>
                   <hr/>
@@ -245,7 +262,7 @@ class DetailAnalysis extends React.Component {
                     </DialogContentText>
                   </DialogContent>
                   <DialogActions>
-                    <Button onClick={this.handleClose} color="primary" autoFocus>
+                    <Button onClick={this.handleAcceptClick} color="primary" autoFocus>
                       Aceptar
                     </Button>
                   </DialogActions>

@@ -129,7 +129,6 @@ class Home extends React.Component {
                       <Form onSubmit={(e) => {
                         e.preventDefault(); 
                         this.handleAppointmentClick(appointment.id_cita,appointment.id_paciente,appointment.id_persona)}}>
-                        {/*TODO Validate state and show the corresponding button*/}
                         <Button
                             className="pull-right"
                             color="primary"

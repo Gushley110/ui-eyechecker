@@ -43,6 +43,7 @@ class CurrentAppointment extends React.Component {
           dialog_open: false,
           id_patient: this.props.location.state.values.id_paciente,
           id_persona: this.props.location.state.values.id_persona,
+          id_cita: this.props.location.state.values.id_cita,
           reports: [],
           last_report: "",
           id_to_delete: -1
@@ -112,17 +113,13 @@ class CurrentAppointment extends React.Component {
       })
     }
 
-    handleItemClick = (event,patient) => {
-      event.preventDefault()
-
-      console.log('Has clickeado ' + patient.id_paciente)
-    }
 
     goToAnalysis = () => {
 
       let o = {
         'id_paciente': this.state.id_patient,
-        'id_persona': this.state.id_persona
+        'id_persona': this.state.id_persona,
+        'id_cita': this.state.id_cita
       }
 
       this.props.history.push('/admin/analysis',{values: o})
@@ -130,8 +127,27 @@ class CurrentAppointment extends React.Component {
 
     handleItemClick = (report) => {
 
-      this.props.history.push('/admin/detail_analysis', {values: {id_reporte: report.id}})
+      let o = {
+        'id_paciente': this.state.id_patient,
+        'id_persona': this.state.id_persona,
+        'id_cita': this.state.id_cita,
+        'id_reporte': report.id,
+        'comment': report.comentarios
+
+      }
+
+      this.props.history.push('/admin/detail_analysis', {values: o})
       
+    }
+
+    endAppointment = () => {
+
+      const { id_cita } = this.state
+
+      API.put('appointment', {id: id_cita, estado_cita: 2})
+        .then(res => {
+          this.props.history.push('/admin/home')
+        })
     }
       
   render() {
@@ -145,12 +161,17 @@ class CurrentAppointment extends React.Component {
                 <Col md="8">
                     <h5 className="title">Cita Actual</h5>
                 </Col>
-                <Col md="4">
+                <Col md="2">
                     <Nav>
                       <Button className="btn btn-primary" onClick={this.goToAnalysis}>
                         Nuevo Análisis
                       </Button>
                     </Nav>
+                </Col>
+                <Col md="2">
+                      <Button color="warning" onClick={this.endAppointment}>
+                        Finalizar Cita
+                      </Button>
                 </Col>
             </Row>
             <Row>
@@ -286,7 +307,7 @@ class CurrentAppointment extends React.Component {
 
                     <Row className="item-clickable" onClick={(e) => {this.handleItemClick(last_report)}}>
                       <Col md="4">
-                        <a href="#">{last_report.url}</a>
+                        <a href="#">{last_report.nombre_reporte}</a>
                       </Col>
                       <Col md="3">
                           {last_report.fecha_creacion}
@@ -343,8 +364,7 @@ class CurrentAppointment extends React.Component {
                       <React.Fragment key={report.id}>
                       <Row className="item-clickable" onClick={(e) => {this.handleItemClick(report)}}>
                         <Col md="7">
-                          <a href={report.url} target="_blank">{report.url}</a>
-                          <span onClick={() => window.open(report.url,"_blank")}>sdfsdf</span>
+                          <a href={report.url} target="_blank">{report.nombre_reporte}</a>
                         </Col>
                         <Col md="5">
                             {report.fecha_creacion}
