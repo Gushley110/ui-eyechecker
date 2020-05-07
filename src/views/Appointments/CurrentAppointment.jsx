@@ -132,8 +132,8 @@ class CurrentAppointment extends React.Component {
         'id_persona': this.state.id_persona,
         'id_cita': this.state.id_cita,
         'id_reporte': report.id,
-        'comment': report.comentarios
-
+        'comment': report.comentarios,
+        'nombre_reporte': report.nombre_reporte
       }
 
       this.props.history.push('/admin/detail_analysis', {values: o})

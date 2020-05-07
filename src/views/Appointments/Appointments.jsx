@@ -188,7 +188,7 @@ class Appointments extends React.Component {
             <Col md="12">
               <Card>
                 <CardBody>
-                  <Table responsive className="clickable">
+                  <Table responsive>
                     <thead className="text-primary">
                       <tr>
                         <th>Paciente</th>
@@ -207,8 +207,6 @@ class Appointments extends React.Component {
                             <td>{appointment.fecha_creacion} </td>
                             <td>{appointment.estado_cita}</td>
                             <td>
-                              <Button id={appointment.id_cita} onClick={this.handleEdit}>Editar</Button>
-                              <span>  </span>
                               <Button id={appointment.id_cita} onClick={this.handleDeleteClick} color="warning">Cancelar</Button>
                             </td>
                           </tr>

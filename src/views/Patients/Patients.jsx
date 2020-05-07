@@ -89,6 +89,18 @@ class Patients extends React.Component {
       this.setDialogMsg('¿Estás seguro de borrar a este paciente?', `Los datos de ${name} serán eliminados permanentemente y no podrán ser recuperados.`)
       this.setIdToDelete(id)
     }
+
+    handleEdit = (event,patient) => {
+      event.preventDefault()
+      event.stopPropagation()
+
+      const { history } = this.props
+
+      console.log(patient)
+      history.push('/admin/edit_patient', {values: patient})
+      
+
+    }
     
     handleDelete = event => {
       event.preventDefault();
@@ -154,7 +166,7 @@ class Patients extends React.Component {
                             <td>{patient.email}</td>
                             
                             <td>
-                              <Button id={patient.id_paciente} onClick={this.handleEdit}>Editar</Button>
+                              <Button id={patient.id_paciente} onClick={(e) => {this.handleEdit(e,patient)}}>Editar</Button>
                               <span>  </span>
                               <Button id={patient.id_paciente} onClick={this.handleDeleteClick} color="warning">Borrar</Button>
                             </td>

@@ -29,6 +29,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+
+import { logOut } from 'store/actions/sessionHelper'
 import API from 'api'
 
 
@@ -56,12 +58,7 @@ class Account extends React.Component {
 
     setDialogMsg = (title,msg) => {
       this.setState({dialog_title: title,dialog_message: msg})
-      this.setDialogOpen(true)
     }		  
-
-    setIdToDelete = (id) => {
-      this.setState({id_to_delete: id})
-    }
 
     handleClose = () => {
       this.setDialogOpen(false)
@@ -71,6 +68,25 @@ class Account extends React.Component {
       
       this.props.history.push('/admin/edit_account', {values: this.state.user})
 
+    }
+
+    handleDeleteClick = event => {
+      event.preventDefault()
+      event.stopPropagation()
+
+      this.setDialogMsg('¿Estás seguro de eliminar tu cuenta?', `Los datos de tu cuenta serán eliminados y no podrán ser recuperados`)
+      this.setDialogOpen(true)
+    }
+
+    handleDelete = event => {
+      event.preventDefault();
+
+      let id = this.state.id_to_load
+      
+      API.delete('doctor', { params: {id: id} })
+      .then(res => {
+        logOut()
+      })
     }
       
   render() {

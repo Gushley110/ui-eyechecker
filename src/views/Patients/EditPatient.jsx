@@ -52,7 +52,9 @@ class NewPatient extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      date: new Date('2014-08-18T21:11:54'),
+      date: new Date(),
+      id_persona: this.props.location.state.values.id_persona,
+      patient: [],
       occupations : [],
       civil_status: [],
       dialog_open: false,
@@ -64,12 +66,15 @@ class NewPatient extends React.Component {
   async componentDidMount() {
     
     const req_occupations = await API.get('list/catalogue/ocupacion');
-    const req_cv_status = await API.get('list/catalogue/estado_civil');
+    const req_cv_status = await API.get('list/catalogue/estado_civil');  
+    const patient = await API.get('patient', {params: {id: this.state.id_persona}})  
     
     let occupations = req_occupations.data
     let cv_status = req_cv_status.data
 
-    this.setState({occupations: occupations, civil_status: cv_status});
+    this.setState({occupations: occupations, civil_status: cv_status, patient: patient.data });
+
+    console.log(this.state.patient)
     
   }
 
@@ -116,8 +121,7 @@ class NewPatient extends React.Component {
 
   render() {
       const err_msgs = ["Éste campo es obligatorio", "Formato Incorrecto"]
-      const occupations = this.state.occupations
-      const civil_status = this.state.civil_status
+      const { patient,occupations,civil_status } = this.state
       let occupation_items = []
       let cv_status_items = [] 
 
@@ -126,6 +130,7 @@ class NewPatient extends React.Component {
       cv_status_items = this.fillMenuItem(civil_status)
 
     return (
+    
       <>
         <div className="content">
             <Row>
@@ -142,27 +147,20 @@ class NewPatient extends React.Component {
                 <Card>
                   <CardBody>
                   <Formik
+                    enableReinitialize
                     initialValues={{  
-                    nombre:"",
-                    apellido_paterno: "",
-                    apellido_materno: "",
-                    fecha_nacimiento: "1990-01-01T12:00:00",
-                    genero: "",
-                    curp: "",
-                    email: "",
-                    telefono_celular: "",
-                    ocupacion: "1",
-                    estado_civil: "1",
-                    enfermedades_recientes: "",
-                    medicamentos: "",
-                    enfermedades_cronicas: "",
-                    enfermedades_hereditarias: ""
+                    id: patient.id_paciente,
+                    curp: patient.curp,
+                    enfermedades_recientes: patient.enfermedades_recientes,
+                    medicamentos: patient.medicamentos,
+                    enfermedades_cronicas: patient.enfermedades_cronicas,
+                    enfermedades_hereditarias: patient.enfermedades_hereditarias
                   }}
                     onSubmit={async values => {
                       await new Promise(resolve => setTimeout(resolve, 500));
-                      API.post('patient', values)
+                      API.put('patient', values)
                       .then(res => {
-                        this.setDialogMsg('Registro Exitoso','El paciente ' + values.nombre + ' ha sido registrado de manera correcta.')
+                        this.setDialogMsg('Edición exitosa','El paciente ha sido registrado modificado correcta.')
                       })
                       .catch(error => {
                         this.setDialogMsg('Error','Hubo un error al registrar el paciente.')
@@ -170,26 +168,10 @@ class NewPatient extends React.Component {
                       })
                     }}
                     validationSchema={Yup.object().shape({
-                      email: Yup.string()
-                        .email('Formato de correo incorrecto')
-                        .required(err_msgs[0]),
-                      nombre: Yup.string()
-                        .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñ]+$/,err_msgs[1])
-                        .required(err_msgs[0]),
-                      apellido_paterno: Yup.string()
-                        .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñ]+$/,err_msgs[1])
-                        .required(err_msgs[0]),
-                      apellido_materno: Yup.string()
-                        .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñ]+$/,err_msgs[1])
-                        .required(err_msgs[0]),
+                      
                       curp: Yup.string()
                         .matches(/^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$/,err_msgs[1])
                       .required(err_msgs[0]),
-                      telefono_celular: Yup.string()
-                        .matches(/^([0-9]{2})?[0-9]{8}$/,err_msgs[1])
-                        .required(err_msgs[0]),
-                      genero: Yup.string()
-                        .required(err_msgs[0]),
                       medicamentos: Yup.string()
                         .required(err_msgs[0]+'. En caso necesario escriba "Ninguna"'),
                       enfermedades_cronicas: Yup.string()
@@ -210,76 +192,13 @@ class NewPatient extends React.Component {
                       handleSubmit,
                       handleReset,
                       setFieldValue,
-                      setFieldTouched
+                      setFieldTouched,
                     } = props;
                     return (
                     <Form onSubmit={handleSubmit}>
 
                       <Row>
                         <Col md="12">
-                          
-                        <TextField type="text" 
-                        label="Nombre(s)" 
-                        id="nombre"
-                        value={values.nombre} 
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        error={errors.nombre && touched.nombre
-                          ? true 
-                          : false}
-                        helperText={
-                          errors.nombre && touched.nombre ?
-                          errors.nombre :
-                          ''
-                        }
-                        fullWidth
-                        />
-                          
-                        </Col>
-                      </Row>
-
-                      <Row>
-                        <Col md="6">
-                        <TextField type="text" 
-                        label="Apellido Paterno" 
-                        id="apellido_paterno"
-                        value={values.apellido_paterno}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        error={errors.apellido_paterno && touched.apellido_paterno
-                          ? true 
-                          : false}
-                        helperText={
-                          errors.apellido_paterno && touched.apellido_paterno ?
-                          errors.apellido_paterno :
-                          ''
-                        }
-                        fullWidth
-                        />
-                        </Col>
-
-                        <Col md="6">
-                        <TextField type="text" 
-                        label="Apellido Materno"
-                        id="apellido_materno"
-                        value={values.apellido_materno}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        error={errors.apellido_materno && touched.apellido_materno
-                          ? true 
-                          : false}
-                        helperText={
-                          errors.apellido_materno && touched.apellido_materno ?
-                          errors.apellido_materno :
-                          ''
-                        }
-                        fullWidth
-                        />
-                        </Col>
-                      </Row>
-
-                      <Row>
-                        <Col md="6">
                         <TextField type="text" 
                         label="CURP" 
                         id="curp"
@@ -294,113 +213,11 @@ class NewPatient extends React.Component {
                           errors.curp :
                           ''
                         }
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
                         fullWidth
                         />
-                        </Col>
-
-                        <Col md="6">
-                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <DatePicker
-                          margin="normal"
-                          id="date-picker-dialog"
-                          label="Fecha de Nacimiento"
-                          format="yyyy/MM/dd"
-                          value={values.fecha_nacimiento}
-                          onChange={value => setFieldValue('fecha_nacimiento',value)}
-                          fullWidth
-                        />
-                        </MuiPickersUtilsProvider>
-                        </Col>
-                      </Row>
-
-                      <Row>
-                        <Col md="6">
-                        <TextField type="text" 
-                        label="Correo Electrónico" 
-                        id="email"
-                        value={values.email}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        error={errors.email && touched.email
-                          ? true 
-                          : false}
-                        helperText={
-                          errors.email && touched.email ?
-                          errors.email :
-                          ''
-                        }
-                        fullWidth
-                        />
-                        </Col>
-
-                        <Col md="6">
-                        <TextField type="text" 
-                        label="Teléfono" 
-                        id="telefono_celular"
-                        value={values.telefono_celular}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        error={errors.telefono_celular && touched.telefono_celular
-                          ? true 
-                          : false}
-                        helperText={
-                          errors.telefono_celular && touched.telefono_celular ?
-                          errors.telefono_celular :
-                          ''
-                        }
-                        fullWidth
-                        />
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col md="6">
-                        <InputLabel id="ocupacion-label">Ocupación</InputLabel>
-                        <Select
-                          labelId="ocupacion-label"
-                          id="ocupacion"
-                          value={values.ocupacion}
-                          onChange={e => setFieldValue('ocupacion', e.target.value)}
-                          onBlur={()=> setFieldTouched('ocupacion', true)}
-                          fullWidth
-                        >
-                          {occupation_items}
-                          
-                        </Select>
-                        </Col>
-                        <Col md="6">
-                        <InputLabel id="estado_civil-label">Estado Civil</InputLabel>
-                        <Select
-                          labelId="estado_civil-label"
-                          id="estado_civil"
-                          value={values.estado_civil}
-                          onChange={e => setFieldValue('estado_civil', e.target.value)}
-                          onBlur={()=> setFieldTouched('estado_civil', true)}
-                          fullWidth
-                        >
-                          {cv_status_items}
-                          
-                        </Select>
-                        </Col>
-                      </Row>
-
-                      <Row>
-                        <Col md="6">
-                        <FormControl 
-                        error={errors.genero && touched.genero
-                          ? true 
-                          : false}
-                          >
-                        <RadioGroup aria-label="Género" name="genero" 
-                        value={values.genero} 
-                        onChange={e => setFieldValue('genero', e.target.value)}
-                        onBlur={() => setFieldTouched('genero', true)}
-                        >
-                          <FormControlLabel value="Masculino" control={<Radio />} label="Masculino" />
-                          <FormControlLabel value="Femenino" control={<Radio />} label="Femenino" />
-                        </RadioGroup>
-                        {errors.genero && touched.genero ? (<FormHelperText>{errors.genero}</FormHelperText>) : ""}
-                        
-                        </FormControl>
                         </Col>
                       </Row>
 
@@ -422,6 +239,9 @@ class NewPatient extends React.Component {
                             errors.medicamentos :
                             ''
                           }
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
                           fullWidth
                           />
                         </Col>
@@ -443,6 +263,9 @@ class NewPatient extends React.Component {
                             errors.enfermedades_cronicas :
                             ''
                           }
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
                           fullWidth
                           />
                         </Col>
@@ -465,6 +288,9 @@ class NewPatient extends React.Component {
                             errors.enfermedades_hereditarias :
                             ''
                           }
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
                           fullWidth
                           />
                         </Col>
@@ -485,6 +311,9 @@ class NewPatient extends React.Component {
                             errors.enfermedades_recientes :
                             ''
                           }
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
                           fullWidth
                           />
                         </Col>

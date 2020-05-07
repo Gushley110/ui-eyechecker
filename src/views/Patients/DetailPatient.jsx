@@ -76,7 +76,7 @@ class DetailPatient extends React.Component {
 
     handleItemClick = (report) => {
 
-      this.props.history.push('/admin/detail_analysis', {values: {id_reporte: report.id, comment: report.comentarios}})
+      this.props.history.push('/admin/detail_analysis', {values: {id_reporte: report.id, comment: report.comentarios, nombre_reporte: report.nombre_reporte}})
       
     }
       
@@ -219,7 +219,7 @@ class DetailPatient extends React.Component {
                     {this.state.reports.map((report) => {
                         return (
                           <tr key={report.id} onClick={(e) => {this.handleItemClick(report)}}>
-                            <td><a href={report.url}>{report.url}</a></td>
+                            <td><a href={report.url}>{report.nombre_reporte}</a></td>
                             <td>{report.fecha_creacion}</td>
                         <td>{report.comentarios}</td>
                           </tr>

@@ -31,8 +31,8 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import { pdfjs, Document, Page } from 'react-pdf/dist/entry.webpack';
-import PDFfile from '06052020192632.pdf'
 import API from 'api'
+import * as CONSTANT from '../../constants'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -60,7 +60,6 @@ class DetailAnalysis extends React.Component {
         numPages,
         pageNumber: 1,
       });
-      //this.props.location.state.values.pdf_name
     };
 
     changePage = offset => this.setState(prevState => ({
@@ -73,15 +72,15 @@ class DetailAnalysis extends React.Component {
 
     async componentDidMount() {
       let id = this.state.id_to_load
+      const { id_cita, id_patient, id_persona } = this.state
 
-      this.setState({file: require('06052020192632.pdf')})
-      
-      //TODO show correct pdf, try to render from variable
       const {data} = await API.get('patient/analysis/get', { params: {id_reporte: id} });
       this.setState({report: data});
 
+      this.setState({file: this.props.location.state.values.nombre_reporte})
+
+      console.log(id_cita, id_patient, id_persona)
       
-      console.log(this.state.id_to_load)
     }
     
     setDialogOpen = (val) => {
@@ -171,7 +170,8 @@ class DetailAnalysis extends React.Component {
                             <span className="text-muted">REPORTE</span>
                         </Col>
                         <Col md="8">
-                            <a href={PDFfile}>{report.nombre_reporte}</a>
+                            <a href={CONSTANT.FILES_URL + file} target="_blank">{report.nombre_reporte} &nbsp;
+                            <span style={{fontSize: '1.5em'}}><i className="nc-icon nc-cloud-download-93" /></span></a>
                         </Col>
                     </Row>
                   <hr/>
@@ -214,7 +214,7 @@ class DetailAnalysis extends React.Component {
                 <CardBody>
                 <center>
                 <Document
-                  file={file}
+                  file={CONSTANT.FILES_URL + file}
                   onLoadSuccess={this.onDocumentLoadSuccess}
                 >
                   <Page 

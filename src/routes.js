@@ -19,6 +19,7 @@
 
 import Home from "views/Home.jsx";
 import Patients from "views/Patients/Patients.jsx";
+import EditPatient from "views/Patients/EditPatient.jsx"
 import Appointments from "views/Appointments/Appointments";
 import CurrentAppointment from "views/Appointments/CurrentAppointment";
 import NewPatient from "views/Patients/NewPatient";
@@ -90,6 +91,13 @@ var routes = [
     name: "Nuevo Paciente",
     icon: "nc-icon nc-single-02",
     component: NewPatient,
+    layout: "/admin"
+  },
+  {
+    path: "/edit_patient",
+    name: "Editar Paciente",
+    icon: "nc-icon nc-single-02",
+    component: EditPatient,
     layout: "/admin"
   },
   {

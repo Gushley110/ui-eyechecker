@@ -46,6 +46,9 @@ class Home extends React.Component {
 
       const {data} = await API.get('appointment', {params: {id_doctor: id_doctor, fecha: dt}});
       this.setState({appointments: data})
+
+      console.log( process.env.PUBLIC_URL )
+      console.log( process.env.REACT_APP_VAR )
     }
 
     setReadableDate = () => {

@@ -39,6 +39,7 @@ class LoginPage extends React.Component{
         const user_name = remember ? localStorage.getItem('user_name') : ''
         
         this.setState({ remember, user_name })
+        
     }
 
     validateLogin = () => {
