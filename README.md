@@ -18,3 +18,5 @@ globalObject: 'this'
 it should look like this
 
 ![webpack.config.js](configuration.png)
+
+In development Hot Reload forces a re-render on the project when it detects a change in the files, when generating a PDF theres a change of files, so there is a not wanted re-render, to prevent this behavior and to the app to work as expected please disable it as it's shown [here](https://github.com/facebook/create-react-app/issues/2519#issuecomment-318867289). 
