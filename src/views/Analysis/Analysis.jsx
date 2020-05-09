@@ -54,6 +54,7 @@ class Analysis extends React.Component {
           loading: true,
           id_paciente: this.props.location.state.values.id_paciente,
           id_persona: this.props.location.state.values.id_persona,
+          id_cita: this.props.location.state.values.id_cita,
           id_to_delete: -1
         };
     }
@@ -78,8 +79,8 @@ class Analysis extends React.Component {
     handleSubmit = (e) => {
       e.preventDefault()
 
-      let id_paciente = this.state.id_paciente
-      let id_persona = this.state.id_persona
+      const { id_paciente, id_persona, id_cita } = this.state
+
       let id_medico = localStorage.getItem('id_doctor')
 
       let formData = new FormData()
@@ -94,10 +95,19 @@ class Analysis extends React.Component {
 
       API.post('patient/analysis', formData)
                       .then(res => {
-                        //this.setDialogMsg('Registro Exitoso','El paciente ' + values.nombre + ' ha sido registrado de manera correcta.')
-                        this.setDialogOpen(false)
                         
-                        this.props.history.push('/admin/detail_analysis',{values: res.data})
+                        this.setDialogOpen(false)
+
+                        let o = {
+                          'id_paciente': id_paciente,
+                          'id_persona': id_persona,
+                          'id_cita': id_cita,
+                          'comment': "",
+                          'nombre_reporte': res.data.pdf_name,
+                          ...res.data
+                        }
+                        
+                        this.props.history.push('/admin/detail_analysis',{values: o})
                       })
                       .catch(error => {
                         this.setState({loading: false})

@@ -124,7 +124,7 @@ class Appointments extends React.Component {
       .then(res => {
         console.log(res.data)
         this.closeAppointmentForm()
-        this.forceUpdate()
+        this.props.history.push('/admin/home')
 
         //this.setDialogMsg('Registro Exitoso','El paciente ' + values.nombre + ' ha sido registrado de manera correcta.')
         //this.setDialogOpen(false)

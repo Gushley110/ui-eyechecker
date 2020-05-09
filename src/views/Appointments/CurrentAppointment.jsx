@@ -307,7 +307,7 @@ class CurrentAppointment extends React.Component {
 
                     <Row className="item-clickable" onClick={(e) => {this.handleItemClick(last_report)}}>
                       <Col md="4">
-                        <a href="#">{last_report.nombre_reporte}</a>
+                        {last_report.nombre_reporte}
                       </Col>
                       <Col md="3">
                           {last_report.fecha_creacion}
@@ -364,7 +364,7 @@ class CurrentAppointment extends React.Component {
                       <React.Fragment key={report.id}>
                       <Row className="item-clickable" onClick={(e) => {this.handleItemClick(report)}}>
                         <Col md="7">
-                          <a href={report.url} target="_blank">{report.nombre_reporte}</a>
+                          {report.nombre_reporte}
                         </Col>
                         <Col md="5">
                             {report.fecha_creacion}
@@ -373,8 +373,6 @@ class CurrentAppointment extends React.Component {
                       </React.Fragment>
                     )
                   })}
-
-                  
                   <hr/>
                 </>
                 :

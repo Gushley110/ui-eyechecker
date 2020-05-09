@@ -41,16 +41,16 @@ class DetailAnalysis extends React.Component {
     constructor(props) {
 		super(props);
         this.state = {
-          report: "",
+          report     : "",
           dialog_open: false,
-          file: null,
-          id_to_load: this.props.location.state.values.id_reporte,
-          id_patient: this.props.location.state.values.id_paciente,
-          id_persona: this.props.location.state.values.id_persona,
-          id_cita: this.props.location.state.values.id_cita,
-          numPages : null,
+          file       : null,
+          id_to_load : this.props.location.state.values.id_reporte,
+          id_patient : this.props.location.state.values.id_paciente,
+          id_persona : this.props.location.state.values.id_persona,
+          id_cita    : this.props.location.state.values.id_cita,
+          numPages   : null,
           pageNumber : 1,
-          comment: this.props.location.state.values.comment
+          comment    : this.props.location.state.values.comment
         };
     }
 
